@@ -1,3 +1,5 @@
+import { GET_CURRENT_USER, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+
 const initialState = {
   content: [],
   isLoading: false,
@@ -6,18 +8,18 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_USER_OK":
+    case GET_CURRENT_USER:
       return {
         ...state,
         content: action.payload,
         isLoading: false,
       };
-    case "IS_LOADING_ON":
+    case IS_LOADING_ON:
       return {
         ...state,
         isLoading: true,
       };
-    case "IS_LOADING_OFF":
+    case IS_LOADING_OFF:
       return {
         ...state,
         isLoading: false,
