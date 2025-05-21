@@ -6,6 +6,7 @@ export const GET_BOOKS_BY_TITLE = "GET_BOOKS_BY_TITLE";
 export const GET_BOOKS_BY_AUTHOR = "GET_BOOKS_BY_AUTHOR";
 export const GET_BOOKS_BY_GENRE = "GET_BOOKS_BY_GENRE";
 export const GET_BOOK_BY_ID = "GET_BOOK_BY_ID";
+export const GET_AUTHOR_BY_NAME = "GET_AUTHOR_BY_NAME";
 
 export const registerUser = (userData) => {
   return async (dispatch) => {
@@ -118,7 +119,7 @@ export const getBooksByAuthor = (autore) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
-      const response = await fetch(`${apiUrl}/libri/titolo/${encodeURIComponent(autore)}`, {
+      const response = await fetch(`${apiUrl}/libri/autore/${encodeURIComponent(autore)}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -136,12 +137,36 @@ export const getBooksByAuthor = (autore) => {
     }
   };
 };
+
+export const getBooksByAuthorId = (autoreId) => {
+  return async (dispatch) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/libri/autore/id/${encodeURIComponent(autoreId)}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_BOOKS_BY_AUTHOR, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero dei libri per autore");
+      }
+    } catch (error) {
+      console.error("Errore durante il recupero dei libri per autore", error);
+    }
+  };
+};
 export const getBooksByGenre = (genere) => {
   return async (dispatch) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
-      const response = await fetch(`${apiUrl}/libri/titolo/${encodeURIComponent(genere)}`, {
+      const response = await fetch(`${apiUrl}/libri/genere/${encodeURIComponent(genere)}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -181,6 +206,30 @@ export const getBookById = (id) => {
       }
     } catch (error) {
       console.log("Errore durante il recupero del libro", error);
+    }
+  };
+};
+
+export const getAuthorByName = (name) => {
+  return async (dispatch) => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/autori/nome/${name}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_AUTHOR_BY_NAME, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero dell'autore");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero dell'autore", error);
     }
   };
 };

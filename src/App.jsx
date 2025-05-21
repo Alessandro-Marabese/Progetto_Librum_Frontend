@@ -22,7 +22,7 @@ function App() {
           <Route path="/search?" element={<Search />} />
           <Route path="/generi" element={<GeneriSearch />} />
           <Route path="/libro/:libroId" element={<LibroDetails />} />
-          <Route path="/autore/:autoreId" element={<AutoreDetails />} />
+          <Route path="/autore/:autoreName" element={<AutoreDetails />} />
         </Routes>
       </BrowserRouter>
     </>

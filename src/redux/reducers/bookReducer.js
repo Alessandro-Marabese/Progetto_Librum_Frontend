@@ -17,7 +17,7 @@ const bookReducer = (state = initialState, action) => {
     case GET_BOOKS_BY_AUTHOR:
       return {
         ...state,
-        content: action.payload,
+        content: action.payload.content,
         isLoading: false,
       };
     case GET_BOOKS_BY_GENRE:
