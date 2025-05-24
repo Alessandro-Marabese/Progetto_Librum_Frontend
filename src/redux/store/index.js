@@ -2,11 +2,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "../reducers/userReducer";
 import bookReducer from "../reducers/bookReducer";
 import authorReducer from "../reducers/authorReducer";
+import genreReducer from "../reducers/genreReducer";
 
 const rootReducer = combineReducers({
   users: userReducer,
   books: bookReducer,
   authors: authorReducer,
+  genres: genreReducer,
 });
 
 const store = configureStore({
