@@ -1,17 +1,29 @@
 import { Button, Container, Dropdown, Form, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 function NavBar() {
+  const navigate = useNavigate();
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container className="w-75">
-        <Navbar.Brand href="#home">Librum</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/homepage">
+          Librum
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="flex-grow-0">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">My Books</Nav.Link>
+            <Nav.Link as={Link} to="/homepage">
+              Home
+            </Nav.Link>
+            <Nav.Link as={Link} to="/mybooks">
+              My Books
+            </Nav.Link>
             <NavDropdown title="Browse" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Explore</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">All Genres</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/search?">
+                Explore
+              </NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/generi">
+                All Genres
+              </NavDropdown.Item>
               <NavDropdown.Item href="#action/3.3">Recommendations</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Community" id="basic-nav-dropdown">
@@ -23,7 +35,7 @@ function NavBar() {
         <div>
           <Form className="d-flex">
             <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" />
-            <Button variant="outline-success">
+            <Button variant="outline-success" onClick={() => navigate("/search?")}>
               <ion-icon name="search-outline"></ion-icon>
             </Button>
           </Form>

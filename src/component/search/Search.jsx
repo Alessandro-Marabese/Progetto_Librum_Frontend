@@ -70,7 +70,7 @@ function Search() {
                     <Link to={`/libro/${encodeURIComponent(book.id)}`}>{book.titolo}</Link>
                   </h3>
                   <p>
-                    by <Link to={`/authors/${book.nomiAutori[0].id}`}>{book.nomiAutori[0]}</Link>
+                    by <Link to={`/autore/${book.nomiAutori[0]}`}>{book.nomiAutori[0]}</Link>
                   </p>
                   <p>Primo anno di pubblicazione {book.primoAnnoPubblicazione}</p>
                 </Col>

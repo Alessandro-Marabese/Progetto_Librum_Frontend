@@ -10,6 +10,7 @@ import GeneriSearch from "./component/search/GeneriSearch";
 import LibroDetails from "./component/libro/LibroDetails";
 import AutoreDetails from "./component/autore/AutoreDetails";
 import Genere from "./component/genere/Genere";
+import MyBooks from "./component/profile/MyBooks";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/libro/:libroId" element={<LibroDetails />} />
           <Route path="/autore/:autoreName" element={<AutoreDetails />} />
           <Route path="/generi/:genereName" element={<Genere />} />
+          <Route path="/mybooks" element={<MyBooks />} />
         </Routes>
       </BrowserRouter>
     </>
