@@ -8,6 +8,9 @@ export const GET_BOOKS_BY_GENRE = "GET_BOOKS_BY_GENRE";
 export const GET_BOOK_BY_ID = "GET_BOOK_BY_ID";
 export const GET_AUTHOR_BY_NAME = "GET_AUTHOR_BY_NAME";
 export const GET_ALL_GENRES = "GET_ALL_GENRES";
+export const ADD_USERBOOK = "ADD_USERBOOK";
+export const GET_USERBOOKS_BY_USER = "GET_USERBOOKS_BY_USER";
+export const DELETE_USERBOOK = "DELETE_USERBOOK";
 
 export const registerUser = (userData) => {
   return async (dispatch) => {
@@ -260,13 +263,72 @@ export const getAllGenres = () => {
         const data = await response.json();
         console.log(data);
         dispatch({ type: GET_ALL_GENRES, payload: data });
-        dispatch({ type: IS_LOADING_OFF });
+
         return data;
       } else {
         throw new Error("Errore durante il recupero dei genere");
       }
     } catch (error) {
       console.log("Errore durante il recupero dei genere", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const getUserBookByUser = (userId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/userbook/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_USERBOOKS_BY_USER, payload: data });
+
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero dei libri dell'utente");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero dei libri dell'utente", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const addUserBook = (book) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/userbook`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(book),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: ADD_USERBOOK, payload: data });
+
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero dei libri dell'utente");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero dei libri dell'utente", error);
+    } finally {
       dispatch({ type: IS_LOADING_OFF });
     }
   };

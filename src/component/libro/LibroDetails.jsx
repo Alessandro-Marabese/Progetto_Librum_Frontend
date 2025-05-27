@@ -1,19 +1,23 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAuthorByName, getBookById } from "../../redux/actions";
+import { getAuthorByName, getBookById, getCurrentUser } from "../../redux/actions";
 import { Link } from "react-router-dom";
+import WantToReadModal from "./WantToReadModal";
 
 function LibroDetails() {
   const dispatch = useDispatch();
   const { libroId } = useParams();
   const rawBook = useSelector((state) => state.books?.content);
+  const [modalShow, setModalShow] = useState(false);
 
   const book = useMemo(() => rawBook || {}, [rawBook]);
   const author = useSelector((state) => state.authors?.content) || [];
+  const currentUser = useSelector((state) => state.users?.content);
 
   useEffect(() => {
+    dispatch(getCurrentUser());
     dispatch(getBookById(libroId));
   }, [dispatch, libroId]);
 
@@ -28,7 +32,8 @@ function LibroDetails() {
       <Row>
         <Col className="col-3">
           <img src={book.coverUrl} alt={book.titolo} className="img-fluid" />
-          <Button>Want to Read</Button>
+          <Button onClick={() => setModalShow(true)}>Want to Read</Button>
+          <WantToReadModal show={modalShow} onHide={() => setModalShow(false)} book={book} currentUser={currentUser} />
         </Col>
         <Col className="col-9">
           <h1>{book.titolo}</h1>

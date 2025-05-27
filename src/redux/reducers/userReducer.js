@@ -1,4 +1,4 @@
-import { GET_CURRENT_USER, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+import { ADD_USER, GET_CURRENT_USER, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
 
 const initialState = {
   content: [],
@@ -24,7 +24,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
       };
-    case "ADD_USER":
+    case ADD_USER:
       return {
         ...state,
         content: action.payload,
