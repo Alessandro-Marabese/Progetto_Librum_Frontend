@@ -1,24 +1,41 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAuthorByName, getBookById, getCurrentUser } from "../../redux/actions";
+import { getAuthorByName, getBookById, getCommentByReview, getCurrentUser, getReviewsByBook, getUserById } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import WantToReadModal from "./WantToReadModal";
+import ReviewModal from "./ReviewModal";
 
 function LibroDetails() {
   const dispatch = useDispatch();
   const { libroId } = useParams();
   const rawBook = useSelector((state) => state.books?.content);
   const [modalShow, setModalShow] = useState(false);
+  const [modalReviewShow, setModalReviewShow] = useState(false);
 
   const book = useMemo(() => rawBook || {}, [rawBook]);
   const author = useSelector((state) => state.authors?.content) || [];
   const currentUser = useSelector((state) => state.users?.content);
+  const reviews = useSelector((state) => state.reviews?.content?.content) || [];
+  const usersById = useSelector((state) => state.users.userReviews || {});
+  const commentsByReview = useSelector((state) => state.comment.commentsByReview || {});
+  const isLoadingByReview = useSelector((state) => state.comment.isLoadingByReview || {});
+  const [activeReviewIds, setActiveReviewIds] = useState([]);
+
+  const toggleComments = (reviewId) => {
+    if (!activeReviewIds.includes(reviewId)) {
+      dispatch(getCommentByReview(reviewId));
+      setActiveReviewIds((prev) => [...prev, reviewId]);
+    } else {
+      setActiveReviewIds((prev) => prev.filter((id) => id !== reviewId));
+    }
+  };
 
   useEffect(() => {
     dispatch(getCurrentUser());
     dispatch(getBookById(libroId));
+    dispatch(getReviewsByBook(libroId));
   }, [dispatch, libroId]);
 
   useEffect(() => {
@@ -26,6 +43,20 @@ function LibroDetails() {
       dispatch(getAuthorByName(book.nomiAutori[0]));
     }
   }, [dispatch, book]);
+
+  useEffect(() => {
+    console.log(
+      "User IDs dalle review:",
+      reviews.map((r) => r.utenteId)
+    );
+    if (reviews.length > 0) {
+      const userIds = [...new Set(reviews.map((r) => r.utenteId))];
+      const missingUserIds = userIds.filter((id) => !usersById[id]);
+      missingUserIds.forEach((userId) => {
+        dispatch(getUserById(userId));
+      });
+    }
+  }, [dispatch, reviews, usersById]);
 
   return (
     <Container>
@@ -44,7 +75,7 @@ function LibroDetails() {
           <div className="d-flex">
             {book.nomiGeneri &&
               book.nomiGeneri.map((genere) => (
-                <Link to={`/genres/${genere}`} key={genere} className="me-2">
+                <Link to={`/generi/${genere}`} key={genere} className="me-2">
                   {genere}
                 </Link>
               ))}
@@ -70,6 +101,66 @@ function LibroDetails() {
               </Placeholder>
             )}
           </div>
+          <Row>
+            <h2>Rating and Reviews</h2>
+            <Col>
+              <h3>My Reviews</h3>
+              <h4>What do you think?</h4>
+              <Button onClick={() => setModalReviewShow(true)}>Write a review </Button>
+              <ReviewModal show={modalReviewShow} onHide={() => setModalReviewShow(false)} book={book} currentUser={currentUser} />
+            </Col>
+          </Row>
+          {reviews.map((review) => {
+            const user = usersById[review.utenteId];
+            return (
+              <Row key={review.id}>
+                <Col className="col-3">
+                  {user ? (
+                    <>
+                      <img src={user.avatar} alt={user.nome} />
+                      <p>
+                        {user.nome} {user.cognome}
+                      </p>
+                    </>
+                  ) : (
+                    <Spinner animation="border" />
+                  )}
+                </Col>
+                <Col className="col-9">
+                  <p>{review.commento}</p>
+                  <div>
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <ion-icon
+                        key={num}
+                        name={review.rating >= num ? "star" : "star-outline"}
+                        style={{
+                          cursor: "default", // niente puntatore perché è solo visuale
+                          fontSize: "20px",
+                          color: "#ffc107",
+                          marginRight: "3px",
+                        }}
+                      ></ion-icon>
+                    ))}
+                  </div>
+                  <p>{review.dataCreazione}</p>
+                  <Button onClick={() => toggleComments(review.id)}>{activeReviewIds.includes(review.id) ? "Hide Comments" : "Show Comments"}</Button>
+                  {activeReviewIds.includes(review.id) && (
+                    <div className="mt-2">
+                      {isLoadingByReview[review.id] ? (
+                        <Spinner animation="border" size="sm" />
+                      ) : (
+                        <>
+                          {(commentsByReview[review.id] || []).map((comment) => (
+                            <p key={comment.id}>{comment.testo}</p>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            );
+          })}
         </Col>
       </Row>
     </Container>

@@ -11,7 +11,7 @@ function Genere() {
   const books = searchedGenre?.books || [];
   const isLoading = useSelector((state) => state.genres.isLoading);
   console.log(books);
-
+  console.log("searchedGenre:", searchedGenre);
   useEffect(() => {
     if (genereName) {
       dispatch(getBooksByGenre(genereName));
@@ -25,7 +25,7 @@ function Genere() {
         {isLoading ? (
           <Spinner animation="border" />
         ) : (
-          books.content.map((book) => (
+          books?.content?.map((book) => (
             <Col key={book.id} className="col-3">
               <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                 <Card.Img variant="top" src={book.coverUrl} />

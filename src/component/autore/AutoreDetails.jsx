@@ -49,7 +49,7 @@ function AutoreDetails() {
             <h5>Genres</h5>
             {author.generi &&
               author.generi.map((genere) => (
-                <Link to={`/genres/${genere}`} key={genere} className="me-2">
+                <Link to={`/generi/${genere}`} key={genere} className="me-2">
                   {genere}
                 </Link>
               ))}

@@ -4,6 +4,7 @@ import bookReducer from "../reducers/bookReducer";
 import authorReducer from "../reducers/authorReducer";
 import genreReducer from "../reducers/genreReducer";
 import userBookReducer from "../reducers/userBookReducer";
+import reviewReducer from "../reducers/reviewReducer";
 
 const rootReducer = combineReducers({
   users: userReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   authors: authorReducer,
   genres: genreReducer,
   userBook: userBookReducer,
+  reviews: reviewReducer,
 });
 
 const store = configureStore({
