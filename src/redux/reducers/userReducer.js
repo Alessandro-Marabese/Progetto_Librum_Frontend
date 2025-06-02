@@ -1,8 +1,9 @@
-import { ADD_USER, GET_CURRENT_USER, GET_USER_BY_ID, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+import { ADD_USER, GET_CURRENT_USER, GET_USER_BY_ID, GET_USER_COMMENTS_BY_ID, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
 
 const initialState = {
   content: [],
   userReviews: {},
+  userComments: {},
   isLoading: false,
   isError: null,
 };
@@ -20,6 +21,15 @@ const userReducer = (state = initialState, action) => {
         ...state,
         userReviews: {
           ...state.userReviews,
+          [action.payload.id]: action.payload,
+        },
+        isLoading: false,
+      };
+    case GET_USER_COMMENTS_BY_ID:
+      return {
+        ...state,
+        userComments: {
+          ...state.userComments,
           [action.payload.id]: action.payload,
         },
         isLoading: false,

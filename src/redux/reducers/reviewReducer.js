@@ -1,4 +1,4 @@
-import { ADD_REVIEW, DELETE_REVIEW, GET_REVIEWS_BY_BOOK, GET_REVIEWS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+import { ADD_REVIEW, DELETE_REVIEW, GET_REVIEWS_BY_BOOK, GET_REVIEWS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON, UPDATE_REVIEW } from "../actions";
 
 const initialState = {
   content: [],
@@ -24,6 +24,12 @@ const reviewReducer = (state = initialState, action) => {
       return {
         ...state,
         content: [...state.content, action.payload],
+        isLoading: false,
+      };
+    case UPDATE_REVIEW:
+      return {
+        ...state,
+        content: state.content.map((review) => (review.id === action.payload.id ? action.payload : review)),
         isLoading: false,
       };
     case DELETE_REVIEW:

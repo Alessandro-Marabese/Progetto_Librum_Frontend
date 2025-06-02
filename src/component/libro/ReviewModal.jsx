@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { addReview } from "../../redux/actions";
+import { addReview, updateReview } from "../../redux/actions";
 
 function ReviewModal(props) {
   const dispatch = useDispatch();
@@ -10,7 +10,17 @@ function ReviewModal(props) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
-  const { currentUser } = props;
+  const { currentUser, reviewToEdit } = props;
+
+  useEffect(() => {
+    if (reviewToEdit) {
+      setCommento(reviewToEdit.commento || "");
+      setRating(reviewToEdit.rating || 0);
+    } else {
+      setCommento("");
+      setRating(0);
+    }
+  }, [reviewToEdit]);
 
   const handleSubmitReview = (e) => {
     e.preventDefault();
@@ -26,7 +36,14 @@ function ReviewModal(props) {
       utenteId: currentUser?.id,
     };
 
-    const result = dispatch(addReview(review));
+    let result;
+    if (reviewToEdit) {
+      review.id = reviewToEdit.id;
+      result = dispatch(updateReview(review));
+    } else {
+      result = dispatch(addReview(review));
+    }
+
     if (result) {
       setShowSuccess(true);
       setCommento("");
@@ -34,19 +51,20 @@ function ReviewModal(props) {
       setTimeout(() => {
         setShowSuccess(false);
         props.onHide();
+        props.onUpdate?.();
       }, 2000);
     }
   };
   return (
     <Modal size="xs" aria-labelledby="contained-modal-title-vcenter" centered show={props.show} onHide={props.onHide}>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Leave a Review</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter"> {reviewToEdit ? "Modify your review" : "Leave a review"}</Modal.Title>
       </Modal.Header>
       <Modal.Body className="d-block">
-        {showSuccess && <Alert variant="success">Recensione inviata con successo!</Alert>}
+        {showSuccess && <Alert variant="success">Review {reviewToEdit ? "modified" : "sent"} successfully!</Alert>}
         <Form onSubmit={(event) => handleSubmitReview(event)}>
           <Form.Group controlId="formCommento">
-            <Form.Label>Commento</Form.Label>
+            <Form.Label>Comment</Form.Label>
             <Form.Control as="textarea" rows={4} value={commento} onChange={(e) => setCommento(e.target.value)} required />
           </Form.Group>
 
@@ -76,7 +94,7 @@ function ReviewModal(props) {
               Cancel
             </Button>
             <Button type="submit" variant="primary" disabled={isLoading}>
-              {isLoading ? <Spinner animation="border" size="sm" /> : "Invia Recensione"}
+              {isLoading ? <Spinner animation="border" size="sm" /> : reviewToEdit ? "Save changes" : "Send review"}
             </Button>
           </div>
         </Form>

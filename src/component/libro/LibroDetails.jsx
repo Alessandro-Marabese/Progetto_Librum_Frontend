@@ -18,9 +18,11 @@ function LibroDetails() {
   const author = useSelector((state) => state.authors?.content) || [];
   const currentUser = useSelector((state) => state.users?.content);
   const reviews = useSelector((state) => state.reviews?.content?.content) || [];
-  const usersById = useSelector((state) => state.users.userReviews || {});
-  const commentsByReview = useSelector((state) => state.comment.commentsByReview || {});
-  const isLoadingByReview = useSelector((state) => state.comment.isLoadingByReview || {});
+  const myReview = reviews.find((r) => r.utenteId === currentUser?.id);
+  const usersReviewsById = useSelector((state) => state.users.userReviews || {});
+  const usersCommentsById = useSelector((state) => state.users.userComments || {});
+  const commentsByReview = useSelector((state) => state.comments.commentsByReview || {});
+  const isLoadingByReview = useSelector((state) => state.comments.isLoadingByReview || {});
   const [activeReviewIds, setActiveReviewIds] = useState([]);
 
   const toggleComments = (reviewId) => {
@@ -30,6 +32,10 @@ function LibroDetails() {
     } else {
       setActiveReviewIds((prev) => prev.filter((id) => id !== reviewId));
     }
+  };
+
+  const refreshReviews = () => {
+    dispatch(getReviewsByBook(libroId));
   };
 
   useEffect(() => {
@@ -51,12 +57,21 @@ function LibroDetails() {
     );
     if (reviews.length > 0) {
       const userIds = [...new Set(reviews.map((r) => r.utenteId))];
-      const missingUserIds = userIds.filter((id) => !usersById[id]);
+      const missingUserIds = userIds.filter((id) => !usersReviewsById[id]);
       missingUserIds.forEach((userId) => {
-        dispatch(getUserById(userId));
+        dispatch(getUserById(userId, "review"));
       });
     }
-  }, [dispatch, reviews, usersById]);
+  }, [dispatch, reviews, usersReviewsById]);
+
+  useEffect(() => {
+    const allComments = Object.values(commentsByReview).flatMap((reviewComments) => reviewComments.content || []);
+    const uniqueUserIds = [...new Set(allComments.map((c) => c.utenteId))];
+    const missingIds = uniqueUserIds.filter((id) => !usersCommentsById[id]);
+    missingIds.forEach((id) => {
+      dispatch(getUserById(id, "comment"));
+    });
+  }, [commentsByReview, dispatch, usersCommentsById]);
 
   return (
     <Container>
@@ -80,7 +95,7 @@ function LibroDetails() {
                 </Link>
               ))}
           </div>
-          <p className="border-bottom">First publish in {book.primoAnnoPubblicazione}</p>
+          <p className="border-bottom">First published in {book.primoAnnoPubblicazione}</p>
           <div>
             <h2>About the Author</h2>
             {author ? (
@@ -105,13 +120,64 @@ function LibroDetails() {
             <h2>Rating and Reviews</h2>
             <Col>
               <h3>My Reviews</h3>
-              <h4>What do you think?</h4>
-              <Button onClick={() => setModalReviewShow(true)}>Write a review </Button>
-              <ReviewModal show={modalReviewShow} onHide={() => setModalReviewShow(false)} book={book} currentUser={currentUser} />
+
+              {myReview ? (
+                <Row>
+                  <Col className="col-3">
+                    {currentUser ? (
+                      <>
+                        <img src={currentUser.avatar} alt={currentUser.username} />
+                      </>
+                    ) : (
+                      <Spinner animation="border" />
+                    )}
+                  </Col>
+                  <Col className="col-9">
+                    <p>{myReview.commento}</p>
+                    <div>
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <ion-icon
+                          key={num}
+                          name={myReview.rating >= num ? "star" : "star-outline"}
+                          style={{
+                            cursor: "default",
+                            fontSize: "20px",
+                            color: "#ffc107",
+                            marginRight: "3px",
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <p>{myReview.dataCreazione}</p>
+                    <Button onClick={() => setModalReviewShow(true)}>Edit Review</Button>
+                    <ReviewModal
+                      show={modalReviewShow}
+                      onHide={() => setModalReviewShow(false)}
+                      book={book}
+                      currentUser={currentUser}
+                      reviewToEdit={myReview}
+                      onUpdate={refreshReviews}
+                    />
+                  </Col>
+                </Row>
+              ) : (
+                <>
+                  <h4>What do you think?</h4>
+                  <Button onClick={() => setModalReviewShow(true)}>Write a review</Button>
+                  <ReviewModal
+                    show={modalReviewShow}
+                    onHide={() => setModalReviewShow(false)}
+                    book={book}
+                    currentUser={currentUser}
+                    onUpdate={refreshReviews}
+                  />
+                </>
+              )}
             </Col>
           </Row>
+          <h3>Community Reviews</h3>
           {reviews.map((review) => {
-            const user = usersById[review.utenteId];
+            const user = usersReviewsById[review.utenteId];
             return (
               <Row key={review.id}>
                 <Col className="col-3">
@@ -150,9 +216,30 @@ function LibroDetails() {
                         <Spinner animation="border" size="sm" />
                       ) : (
                         <>
-                          {(commentsByReview[review.id] || []).map((comment) => (
-                            <p key={comment.id}>{comment.testo}</p>
-                          ))}
+                          {(commentsByReview[review.id] || []).content.map((comment) => {
+                            const userComment = usersCommentsById[comment.utenteId];
+                            return (
+                              <div key={comment.id} className="d-flex align-items-start mb-2">
+                                {userComment ? (
+                                  <img
+                                    src={userComment.avatar}
+                                    alt={userComment.nome}
+                                    className="rounded-circle me-2"
+                                    style={{ width: "32px", height: "32px", objectFit: "cover" }}
+                                  />
+                                ) : (
+                                  <Spinner animation="border" size="sm" className="me-2" />
+                                )}
+                                <div>
+                                  <p className="mb-1 fw-semibold">{userComment ? `${userComment.nome} ${userComment.cognome}` : "Caricamento..."}</p>
+                                  <p className="mb-0">{comment.testo}</p>
+                                  <p className="text-muted" style={{ fontSize: "12px" }}>
+                                    {comment.dataCommento}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </>
                       )}
                     </div>

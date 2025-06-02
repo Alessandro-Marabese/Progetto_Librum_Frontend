@@ -1,5 +1,6 @@
 export const GET_CURRENT_USER = "GET_CURRENT_USER";
 export const GET_USER_BY_ID = "GET_USER_BY_ID";
+export const GET_USER_COMMENTS_BY_ID = "GET_USER_COMMENTS_BY_ID";
 export const ADD_USER = "ADD_USER";
 export const IS_LOADING_ON = "IS_LOADING_ON";
 export const IS_LOADING_OFF = "IS_LOADING_OFF";
@@ -16,6 +17,7 @@ export const GET_REVIEWS_BY_BOOK = "GET_REVIEWS_BY_BOOK";
 export const GET_REVIEWS_BY_USER = "GET_REVIEWS_BY_USER";
 export const ADD_REVIEW = "ADD_REVIEW";
 export const DELETE_REVIEW = "DELETE_REVIEW";
+export const UPDATE_REVIEW = "UPDATE_REVIEW";
 export const GET_COMMENTS_BY_REVIEW = "GET_COMMENTS_BY_REVIEW";
 export const GET_COMMENTS_BY_USER = "GET_COMMENTS_BY_USER";
 export const ADD_COMMENT = "ADD_COMMENT";
@@ -105,7 +107,7 @@ export const getCurrentUser = () => {
   };
 };
 
-export const getUserById = (utenteId) => {
+export const getUserById = (utenteId, context = "review") => {
   return async (dispatch) => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -118,7 +120,11 @@ export const getUserById = (utenteId) => {
       });
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: GET_USER_BY_ID, payload: data });
+        if (context === "comment") {
+          dispatch({ type: GET_USER_COMMENTS_BY_ID, payload: data });
+        } else {
+          dispatch({ type: GET_USER_BY_ID, payload: data });
+        }
         return data;
       } else {
         throw new Error("Errore durante il recupero dell'utente corrente");
@@ -480,6 +486,36 @@ export const deleteReview = (reviewId) => {
       }
     } catch (error) {
       console.log("Errore durante la cancellazione della recensione", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const updateReview = (review) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/review/${review.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(review),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        dispatch({ type: UPDATE_REVIEW, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante l'aggiornamento della recensione");
+      }
+    } catch (error) {
+      console.log("Errore durante l'aggiornamento della recensione", error);
     } finally {
       dispatch({ type: IS_LOADING_OFF });
     }
