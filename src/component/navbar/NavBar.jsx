@@ -1,7 +1,27 @@
+import { useEffect, useState } from "react";
 import { Button, Container, Dropdown, Form, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../../redux/actions";
 function NavBar() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.users.content);
+  const [title, setTitle] = useState("");
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (title.trim()) {
+      navigate("/search", { state: { title: title.trim() } });
+      setTitle("");
+    } else {
+      navigate("/search?");
+    }
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container className="w-75">
@@ -24,7 +44,6 @@ function NavBar() {
               <NavDropdown.Item as={Link} to="/generi">
                 All Genres
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Recommendations</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Community" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Groups</NavDropdown.Item>
@@ -33,9 +52,9 @@ function NavBar() {
           </Nav>
         </Navbar.Collapse>
         <div>
-          <Form className="d-flex">
-            <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" />
-            <Button variant="outline-success" onClick={() => navigate("/search?")}>
+          <Form className="d-flex" onSubmit={handleSearch}>
+            <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" value={title} onChange={(e) => setTitle(e.target.value)} />
+            <Button variant="outline-success" type="submit">
               <ion-icon name="search-outline"></ion-icon>
             </Button>
           </Form>
@@ -49,13 +68,7 @@ function NavBar() {
               <div className="text-muted">No notifications</div>
             </Dropdown.Menu>
           </Dropdown>
-          <a href="#">
-            <ion-icon name="chatbubbles-outline"></ion-icon>
-          </a>
-          <a href="#">
-            <ion-icon name="mail-outline"></ion-icon>
-          </a>
-          <a href="#">
+          <a href="/friends">
             <ion-icon name="people-outline"></ion-icon>
           </a>
 
@@ -64,9 +77,15 @@ function NavBar() {
               <ion-icon name="person-outline"></ion-icon>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <div className="text-muted">Nome Cognome</div>
-              <Dropdown.Item href="/profile">Profile</Dropdown.Item>
-              <Dropdown.Item eventKey="2">Friends</Dropdown.Item>
+              <div className="text-muted">
+                {currentUser.nome} {currentUser.cognome}
+              </div>
+              <Dropdown.Item as={Link} to={`/profile/${currentUser.id}`}>
+                Profile
+              </Dropdown.Item>
+              <Dropdown.Item as={Link} to="/friends">
+                Friends
+              </Dropdown.Item>
               <Dropdown.Item eventKey="3">Groups</Dropdown.Item>
               <Dropdown.Item eventKey="3">Comments</Dropdown.Item>
               <Dropdown.Item eventKey="3">Discussions</Dropdown.Item>

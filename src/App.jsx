@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import HomePage from "./component/homepage/HomePage";
 import LoginPage from "./component/login/LoginPage";
@@ -11,25 +11,34 @@ import LibroDetails from "./component/libro/LibroDetails";
 import AutoreDetails from "./component/autore/AutoreDetails";
 import Genere from "./component/genere/Genere";
 import MyBooks from "./component/profile/MyBooks";
+import Friends from "./component/profile/Friends";
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const showNavBar = location.pathname !== "/";
   return (
     <>
-      <BrowserRouter>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/homepage" element={<HomePage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/search?" element={<Search />} />
-          <Route path="/generi" element={<GeneriSearch />} />
-          <Route path="/libro/:libroId" element={<LibroDetails />} />
-          <Route path="/autore/:autoreName" element={<AutoreDetails />} />
-          <Route path="/generi/:genereName" element={<Genere />} />
-          <Route path="/mybooks" element={<MyBooks />} />
-        </Routes>
-      </BrowserRouter>
+      {showNavBar && <NavBar />}
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/friends" element={<Friends />} />
+        <Route path="/search?" element={<Search />} />
+        <Route path="/generi" element={<GeneriSearch />} />
+        <Route path="/libro/:libroId" element={<LibroDetails />} />
+        <Route path="/autore/:autoreName" element={<AutoreDetails />} />
+        <Route path="/generi/:genereName" element={<Genere />} />
+        <Route path="/mybooks" element={<MyBooks />} />
+      </Routes>
     </>
+  );
+}
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

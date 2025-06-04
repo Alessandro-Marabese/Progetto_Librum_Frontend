@@ -1,6 +1,8 @@
 export const GET_CURRENT_USER = "GET_CURRENT_USER";
 export const GET_USER_BY_ID = "GET_USER_BY_ID";
 export const GET_USER_COMMENTS_BY_ID = "GET_USER_COMMENTS_BY_ID";
+export const GET_OTHER_USER = "GET_OTHER_USER";
+export const SEARCH_USERS = "SEARCH_USERS";
 export const ADD_USER = "ADD_USER";
 export const IS_LOADING_ON = "IS_LOADING_ON";
 export const IS_LOADING_OFF = "IS_LOADING_OFF";
@@ -12,8 +14,10 @@ export const GET_AUTHOR_BY_NAME = "GET_AUTHOR_BY_NAME";
 export const GET_ALL_GENRES = "GET_ALL_GENRES";
 export const ADD_USERBOOK = "ADD_USERBOOK";
 export const GET_USERBOOKS_BY_USER = "GET_USERBOOKS_BY_USER";
+export const UPDATE_USERBOOK = "UPDATE_USERBOOK";
 export const DELETE_USERBOOK = "DELETE_USERBOOK";
 export const GET_REVIEWS_BY_BOOK = "GET_REVIEWS_BY_BOOK";
+export const GET_REVIEWS_BY_BOOK_MYBOOKS = "GET_REVIEWS_BY_BOOK_MYBOOKS";
 export const GET_REVIEWS_BY_USER = "GET_REVIEWS_BY_USER";
 export const ADD_REVIEW = "ADD_REVIEW";
 export const DELETE_REVIEW = "DELETE_REVIEW";
@@ -22,6 +26,7 @@ export const GET_COMMENTS_BY_REVIEW = "GET_COMMENTS_BY_REVIEW";
 export const GET_COMMENTS_BY_USER = "GET_COMMENTS_BY_USER";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";
+export const GET_FRIENDS = "GET_FRIENDS";
 
 export const registerUser = (userData) => {
   return async (dispatch) => {
@@ -79,7 +84,6 @@ export const getCurrentUser = () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
-      console.log(token);
       const response = await fetch(`${apiUrl}/utenti/current-user`, {
         method: "GET",
         headers: {
@@ -103,6 +107,33 @@ export const getCurrentUser = () => {
           },
         },
       });
+    }
+  };
+};
+
+export const getViewedUser = (id) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/utenti/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_OTHER_USER, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero dell'utente corrente");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero dell'utente corrente", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
     }
   };
 };
@@ -143,6 +174,59 @@ export const getUserById = (utenteId, context = "review") => {
   };
 };
 
+export const getFriendsByUser = (utenteId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/utenti/amici/${utenteId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_FRIENDS, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero degli amici");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero degli amici", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const searchUsers = (query) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/utenti/search?query=${query}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: SEARCH_USERS, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante la ricerca degli utenti");
+      }
+    } catch (error) {
+      console.log("Errore durante la ricerca degli utenti", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
 export const getBooksByTitle = (titolo) => {
   return async (dispatch) => {
     try {
@@ -382,6 +466,36 @@ export const addUserBook = (book) => {
   };
 };
 
+export const updateStatusUserbook = (utenteId, libroId, status) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/userbook/${utenteId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ libroId, nuovoStato: status }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: UPDATE_USERBOOK, payload: data });
+
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero dei libri dell'utente");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero dei libri dell'utente", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
 export const getReviewsByBook = (bookId) => {
   return async (dispatch) => {
     try {
@@ -409,6 +523,35 @@ export const getReviewsByBook = (bookId) => {
     }
   };
 };
+
+export const getReviewsByBookMyBooks = (bookId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const decodedId = decodeURIComponent(bookId);
+      const response = await fetch(`${apiUrl}/review/libro?libroId=${decodedId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_REVIEWS_BY_BOOK_MYBOOKS, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero delle recensioni");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero delle recensioni", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
 export const getReviewsByUser = (userId) => {
   return async (dispatch) => {
     try {
@@ -576,21 +719,20 @@ export const getCommentByUser = (userId) => {
   };
 };
 
-export const addComment = (comment) => {
+export const addComment = (testo, utenteId, reviewId) => {
   return async (dispatch) => {
     try {
       dispatch({ type: IS_LOADING_ON });
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
 
-      const currentUser = getCurrentUser();
-      if (!currentUser || !currentUser.id) {
+      if (!utenteId) {
         throw new Error("Utente non autenticato");
       }
-
-      const commentWithUser = {
-        ...comment,
-        utenteId: currentUser.id,
+      const newComment = {
+        testo,
+        utenteId,
+        reviewId,
       };
 
       const response = await fetch(`${apiUrl}/commenti`, {
@@ -599,7 +741,7 @@ export const addComment = (comment) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(commentWithUser),
+        body: JSON.stringify(newComment),
       });
       if (response.ok) {
         const data = await response.json();

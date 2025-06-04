@@ -1,4 +1,4 @@
-import { ADD_USERBOOK, DELETE_USERBOOK, GET_USERBOOKS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+import { ADD_USERBOOK, DELETE_USERBOOK, GET_USERBOOKS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON, UPDATE_USERBOOK } from "../actions";
 
 const initialState = {
   content: [],
@@ -24,6 +24,12 @@ const userBookReducer = (state = initialState, action) => {
       return {
         ...state,
         content: action.payload,
+        isLoading: false,
+      };
+    case UPDATE_USERBOOK:
+      return {
+        ...state,
+        content: state.content.map((userbook) => (userbook.id === action.payload.id ? action.payload : userbook)),
         isLoading: false,
       };
     case IS_LOADING_ON:

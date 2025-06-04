@@ -1,15 +1,23 @@
 import { Container, Button, Form, Row, Col, Placeholder } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getBooksByAuthor, getBooksByTitle } from "../../redux/actions";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Search() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const passedTitle = location.state?.title;
   const books = useSelector((state) => state.books?.content?.content) || [];
+
+  useEffect(() => {
+    if (passedTitle) {
+      dispatch(getBooksByTitle(passedTitle));
+    }
+  }, [dispatch, passedTitle]);
 
   const handleTitleSearch = (e) => {
     e.preventDefault();

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Dropdown, DropdownButton, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser, getUserBookByUser } from "../../redux/actions";
+import { getCurrentUser, getReviewsByBook, getReviewsByUser, getUserBookByUser, updateStatusUserbook } from "../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
 
 function MyBooks() {
@@ -11,7 +11,11 @@ function MyBooks() {
   const books = useSelector((state) => state.userBook?.content);
   const [selectedShelf, setSelectedShelf] = useState(null);
   const filteredBooks = selectedShelf ? books.filter((book) => book.statoLettura === selectedShelf) : books;
-  console.log(books);
+  const reviewsByUser = useSelector((state) => state.reviews?.content?.content) || [];
+  const reviewsByBook = useSelector((state) => state.reviews?.reviewsByBook?.content) || {};
+  console.log(reviewsByBook);
+  const isLoadingReviews = books?.length > 0 && reviewsByUser.length === 0;
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     dispatch(getCurrentUser());
@@ -20,8 +24,17 @@ function MyBooks() {
   useEffect(() => {
     if (currentUser?.id) {
       dispatch(getUserBookByUser(currentUser.id));
+      dispatch(getReviewsByUser(currentUser.id));
     }
   }, [dispatch, currentUser]);
+
+  useEffect(() => {
+    if (books && books?.length > 0) {
+      books.forEach((book) => {
+        dispatch(getReviewsByBook(book.libro.id));
+      });
+    }
+  }, [books, dispatch]);
 
   const formatStatoLettura = (stato) => {
     switch (stato) {
@@ -36,13 +49,38 @@ function MyBooks() {
     }
   };
 
+  const handleStatusChange = (libroId, nuovoStato) => {
+    if (currentUser?.id && nuovoStato) {
+      dispatch(updateStatusUserbook(currentUser.id, libroId, nuovoStato)).then(() => {
+        dispatch(getUserBookByUser(currentUser.id));
+      });
+    }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (title.trim()) {
+      navigate("/search", { state: { title: title.trim() } });
+      setTitle("");
+    } else {
+      navigate("/search?");
+    }
+  };
+
   return (
     <Container>
       <h1>My Books</h1>
       <div>
-        <Form className="d-flex">
-          <Form.Control type="search" placeholder="Search book to add" className="me-2" aria-label="Search" />
-          <Button variant="outline-success" onClick={() => navigate("/search?")}>
+        <Form className="d-flex" onSubmit={handleSearch}>
+          <Form.Control
+            type="search"
+            placeholder="Search book to add"
+            className="me-2"
+            aria-label="Search"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Button variant="outline-success" type="submit">
             <ion-icon name="search-outline"></ion-icon>
           </Button>
         </Form>
@@ -59,31 +97,67 @@ function MyBooks() {
         </Col>
         <Col className="col-9">
           <Row>
-            <ul>
-              <li>Cover</li>
-              <li>Title</li>
-              <li>Author</li>
-              <li>Avg Rating</li>
-              <li>Rating</li>
-              <li>Bookshelves</li>
+            <ul className="d-flex">
+              <li className="me-4">Cover</li>
+              <li className="me-4">Title</li>
+              <li className="me-4">Author</li>
+              <li className="me-4">My Rating</li>
+              <li className="me-4">Bookshelves</li>
             </ul>
           </Row>
-          {filteredBooks.map((book) => (
-            <Row key={book.libro.id}>
-              <Col>
-                <img src={book.libro.coverUrl} alt={book.libro.titolo} className="img-fluid" />
-              </Col>
-              <Col>
-                <Link to={`/libro/${encodeURIComponent(book.libro.id)}`}>{book.libro.titolo}</Link>
-              </Col>
-              <Col>
-                <Link to={`/autore/${book.libro.nomiAutori[0]}`}>{book.libro.nomiAutori?.[0]}</Link>
-              </Col>
-              <Col></Col>
-              <Col></Col>
-              <Col>{formatStatoLettura(book.statoLettura)}</Col>
-            </Row>
-          ))}
+          {filteredBooks &&
+            filteredBooks.map((book) => {
+              const review = reviewsByUser.find((r) => r.libro?.id === book.libro.id);
+              const rating = review?.rating;
+
+              const reviewsForThisBook = reviewsByBook[book.libro.id] || [];
+              console.log(reviewsForThisBook);
+
+              return (
+                <Row key={book.libro.id}>
+                  <Col>
+                    <img src={book.libro.coverUrl} alt={book.libro.titolo} className="img-fluid" />
+                  </Col>
+                  <Col>
+                    <Link to={`/libro/${encodeURIComponent(book.libro.id)}`}>{book.libro.titolo}</Link>
+                  </Col>
+                  <Col>
+                    <Link to={`/autore/${book.libro.nomiAutori[0]}`}>{book.libro.nomiAutori?.[0]}</Link>
+                  </Col>
+                  <Col>
+                    <div>
+                      {isLoadingReviews ? (
+                        <span>Loading rating...</span>
+                      ) : (
+                        [1, 2, 3, 4, 5].map((num) => (
+                          <ion-icon
+                            key={num}
+                            name={rating >= num ? "star" : "star-outline"}
+                            style={{
+                              cursor: "default",
+                              fontSize: "20px",
+                              color: "#ffc107",
+                              marginRight: "3px",
+                            }}
+                          />
+                        ))
+                      )}
+                    </div>
+                  </Col>
+                  <Col>
+                    <DropdownButton id={`dropdown-${book.libro.id}`} title={formatStatoLettura(book.statoLettura)} variant="outline-secondary" size="sm">
+                      {["WANT_TO_READ", "CURRENTLY_READING", "READ"]
+                        .filter((stato) => stato !== book.statoLettura)
+                        .map((stato) => (
+                          <Dropdown.Item key={stato} onClick={() => handleStatusChange(book.libro.id, stato)}>
+                            {formatStatoLettura(stato)}
+                          </Dropdown.Item>
+                        ))}
+                    </DropdownButton>
+                  </Col>
+                </Row>
+              );
+            })}
         </Col>
       </Row>
     </Container>

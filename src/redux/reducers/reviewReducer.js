@@ -1,7 +1,17 @@
-import { ADD_REVIEW, DELETE_REVIEW, GET_REVIEWS_BY_BOOK, GET_REVIEWS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON, UPDATE_REVIEW } from "../actions";
+import {
+  ADD_REVIEW,
+  DELETE_REVIEW,
+  GET_REVIEWS_BY_BOOK,
+  GET_REVIEWS_BY_BOOK_MYBOOKS,
+  GET_REVIEWS_BY_USER,
+  IS_LOADING_OFF,
+  IS_LOADING_ON,
+  UPDATE_REVIEW,
+} from "../actions";
 
 const initialState = {
   content: [],
+  reviewsByBook: {},
   isLoading: false,
   isError: null,
 };
@@ -13,6 +23,16 @@ const reviewReducer = (state = initialState, action) => {
         ...state,
         content: action.payload,
         isLoading: false,
+      };
+    case GET_REVIEWS_BY_BOOK_MYBOOKS:
+      return {
+        ...state,
+        reviewsByBook: {
+          ...state.reviewsByBook,
+          [action.payload.libroId]: action.payload.reviews,
+        },
+        isLoading: false,
+        isError: null,
       };
     case GET_REVIEWS_BY_USER:
       return {

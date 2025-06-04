@@ -6,6 +6,7 @@ import genreReducer from "../reducers/genreReducer";
 import userBookReducer from "../reducers/userBookReducer";
 import reviewReducer from "../reducers/reviewReducer";
 import commentReducer from "../reducers/commentReducer";
+import friendsReducer from "../reducers/friendsReducer";
 
 const rootReducer = combineReducers({
   users: userReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   userBook: userBookReducer,
   reviews: reviewReducer,
   comments: commentReducer,
+  friends: friendsReducer,
 });
 
 const store = configureStore({

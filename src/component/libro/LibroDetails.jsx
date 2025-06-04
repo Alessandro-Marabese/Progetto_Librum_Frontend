@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAuthorByName, getBookById, getCommentByReview, getCurrentUser, getReviewsByBook, getUserById } from "../../redux/actions";
+import { getAuthorByName, getBookById, getCommentByReview, getCurrentUser, getReviewsByBook, getUserById, addComment } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import WantToReadModal from "./WantToReadModal";
 import ReviewModal from "./ReviewModal";
@@ -24,6 +24,7 @@ function LibroDetails() {
   const commentsByReview = useSelector((state) => state.comments.commentsByReview || {});
   const isLoadingByReview = useSelector((state) => state.comments.isLoadingByReview || {});
   const [activeReviewIds, setActiveReviewIds] = useState([]);
+  const [commentText, setCommentText] = useState("");
 
   const toggleComments = (reviewId) => {
     if (!activeReviewIds.includes(reviewId)) {
@@ -51,10 +52,6 @@ function LibroDetails() {
   }, [dispatch, book]);
 
   useEffect(() => {
-    console.log(
-      "User IDs dalle review:",
-      reviews.map((r) => r.utenteId)
-    );
     if (reviews.length > 0) {
       const userIds = [...new Set(reviews.map((r) => r.utenteId))];
       const missingUserIds = userIds.filter((id) => !usersReviewsById[id]);
@@ -72,6 +69,15 @@ function LibroDetails() {
       dispatch(getUserById(id, "comment"));
     });
   }, [commentsByReview, dispatch, usersCommentsById]);
+
+  const handleAddComment = async (e, reviewId) => {
+    e.preventDefault();
+    if (commentText.trim()) {
+      await dispatch(addComment(commentText, currentUser.id, reviewId));
+      await dispatch(getCommentByReview(reviewId)); // lo fai sempre
+      setCommentText(""); // svuota il campo
+    }
+  };
 
   return (
     <Container>
@@ -126,7 +132,9 @@ function LibroDetails() {
                   <Col className="col-3">
                     {currentUser ? (
                       <>
-                        <img src={currentUser.avatar} alt={currentUser.username} />
+                        <Link to={`/profile/${currentUser.id}`}>
+                          <img src={currentUser.avatar} alt={currentUser.username} />
+                        </Link>
                       </>
                     ) : (
                       <Spinner animation="border" />
@@ -183,9 +191,13 @@ function LibroDetails() {
                 <Col className="col-3">
                   {user ? (
                     <>
-                      <img src={user.avatar} alt={user.nome} />
+                      <Link to={`/profile/${user.id}`}>
+                        <img src={user.avatar} alt={user.nome} />
+                      </Link>
                       <p>
-                        {user.nome} {user.cognome}
+                        <Link to={`/profile/${user.id}`}>
+                          {user.nome} {user.cognome}
+                        </Link>
                       </p>
                     </>
                   ) : (
@@ -221,17 +233,25 @@ function LibroDetails() {
                             return (
                               <div key={comment.id} className="d-flex align-items-start mb-2">
                                 {userComment ? (
-                                  <img
-                                    src={userComment.avatar}
-                                    alt={userComment.nome}
-                                    className="rounded-circle me-2"
-                                    style={{ width: "32px", height: "32px", objectFit: "cover" }}
-                                  />
+                                  <Link to={`/profile/${userComment.id}`}>
+                                    <img
+                                      src={userComment.avatar}
+                                      alt={userComment.nome}
+                                      className="rounded-circle me-2"
+                                      style={{ width: "32px", height: "32px", objectFit: "cover" }}
+                                    />
+                                  </Link>
                                 ) : (
                                   <Spinner animation="border" size="sm" className="me-2" />
                                 )}
                                 <div>
-                                  <p className="mb-1 fw-semibold">{userComment ? `${userComment.nome} ${userComment.cognome}` : "Caricamento..."}</p>
+                                  {userComment ? (
+                                    <Link to={`/profile/${userComment.id}`}>
+                                      <p className="mb-1 fw-semibold">{userComment ? `${userComment.nome} ${userComment.cognome}` : "Caricamento..."}</p>
+                                    </Link>
+                                  ) : (
+                                    <p className="mb-1 fw-semibold">Caricamento...</p>
+                                  )}
                                   <p className="mb-0">{comment.testo}</p>
                                   <p className="text-muted" style={{ fontSize: "12px" }}>
                                     {comment.dataCommento}
@@ -242,6 +262,14 @@ function LibroDetails() {
                           })}
                         </>
                       )}
+                      <div>
+                        <Form className="d-flex" onSubmit={(e) => handleAddComment(e, review.id)}>
+                          <Form.Control placeholder="Add Comment" className="me-2" value={commentText} onChange={(e) => setCommentText(e.target.value)} />
+                          <Button variant="outline-success" type="submit">
+                            Add new comment
+                          </Button>
+                        </Form>
+                      </div>
                     </div>
                   )}
                 </Col>
