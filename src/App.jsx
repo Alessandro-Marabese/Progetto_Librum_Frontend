@@ -12,6 +12,7 @@ import AutoreDetails from "./component/autore/AutoreDetails";
 import Genere from "./component/genere/Genere";
 import MyBooks from "./component/profile/MyBooks";
 import Friends from "./component/profile/Friends";
+import Comments from "./component/profile/Comments";
 
 function AppContent() {
   const location = useLocation();
@@ -30,6 +31,7 @@ function AppContent() {
         <Route path="/autore/:autoreName" element={<AutoreDetails />} />
         <Route path="/generi/:genereName" element={<Genere />} />
         <Route path="/mybooks" element={<MyBooks />} />
+        <Route path="/comments" element={<Comments />} />
       </Routes>
     </>
   );

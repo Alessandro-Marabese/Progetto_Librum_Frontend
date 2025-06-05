@@ -29,6 +29,10 @@ export const GET_COMMENTS_BY_USER = "GET_COMMENTS_BY_USER";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const GET_FRIENDS = "GET_FRIENDS";
+export const GET_FRIENDS_REQUESTS = "GET_FRIENDS_REQUESTS";
+export const ADD_FRIEND_REQUEST = "ADD_FRIEND_REQUEST";
+export const ACCEPT_FRIEND_REQUEST = "ACCEPT_FRIEND_REQUEST";
+export const DECLINE_FRIEND_REQUEST = "DECLINE_FRIEND_REQUEST";
 
 export const registerUser = (userData) => {
   return async (dispatch) => {
@@ -840,6 +844,118 @@ export const deleteComment = (commentId, reviewId) => {
       console.log("Errore durante la cancellazione del commento", error);
     } finally {
       dispatch({ type: IS_LOADING_OFF, reviewId });
+    }
+  };
+};
+
+export const getFriendsRequest = (receiverId, stato) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/amici/requests/${receiverId}/${stato}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_FRIENDS_REQUESTS, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero degli amici");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero degli amici", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const sendFriendRequest = (senderId, receiverId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/amici/${senderId}/${receiverId}`, {
+        method: "POST",
+
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ senderId, receiverId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        throw new Error("Errore durante l'invio della richiesta di amicizia");
+      }
+    } catch (error) {
+      console.log("Errore durante l'invio della richiesta di amicizia", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const acceptFriendRequest = (requestId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/amici/acceptRequest/${requestId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: ACCEPT_FRIEND_REQUEST, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante l'accettazione della richiesta di amicizia");
+      }
+    } catch (error) {
+      console.log("Errore durante l'accettazione della richiesta di amicizia", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const rejectFriendRequest = (requestId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/amici/declineRequest/${requestId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: DECLINE_FRIEND_REQUEST, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante la rifiuto della richiesta di amicizia");
+      }
+    } catch (error) {
+      console.log("Errore durante la rifiuto della richiesta di amicizia", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
     }
   };
 };

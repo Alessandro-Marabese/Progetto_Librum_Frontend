@@ -3,6 +3,7 @@ import { Button, Container, Dropdown, Form, Nav, NavDropdown, Navbar } from "rea
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../redux/actions";
+import Notifications from "./Notifications";
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -60,14 +61,7 @@ function NavBar() {
           </Form>
         </div>
         <div className="d-flex">
-          <Dropdown align="end">
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-              <ion-icon name="notifications-outline"></ion-icon>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <div className="text-muted">No notifications</div>
-            </Dropdown.Menu>
-          </Dropdown>
+          <Notifications utente={currentUser} />
           <a href="/friends">
             <ion-icon name="people-outline"></ion-icon>
           </a>
@@ -87,11 +81,15 @@ function NavBar() {
                 Friends
               </Dropdown.Item>
               <Dropdown.Item eventKey="3">Groups</Dropdown.Item>
-              <Dropdown.Item eventKey="3">Comments</Dropdown.Item>
+              <Dropdown.Item as={Link} to={"/comments"}>
+                Comments
+              </Dropdown.Item>
               <Dropdown.Item eventKey="3">Discussions</Dropdown.Item>
               <Dropdown.Divider />
               <Dropdown.Item eventKey="4">Account Settings</Dropdown.Item>
-              <Dropdown.Item eventKey="4">Log Out</Dropdown.Item>
+              <Dropdown.Item as={Link} to={"/"}>
+                Log Out
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>

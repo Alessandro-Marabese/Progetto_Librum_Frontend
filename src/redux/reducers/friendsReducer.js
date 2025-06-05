@@ -1,7 +1,16 @@
-import { GET_FRIENDS, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+import {
+  ACCEPT_FRIEND_REQUEST,
+  ADD_FRIEND_REQUEST,
+  DECLINE_FRIEND_REQUEST,
+  GET_FRIENDS,
+  GET_FRIENDS_REQUESTS,
+  IS_LOADING_OFF,
+  IS_LOADING_ON,
+} from "../actions";
 
 const initialState = {
   content: [],
+  friendsRequest: [],
   isLoading: false,
 };
 
@@ -11,6 +20,31 @@ const friendsReducer = (state = initialState, action) => {
       return {
         ...state,
         content: action.payload.content,
+        isLoading: false,
+      };
+    case GET_FRIENDS_REQUESTS:
+      return {
+        ...state,
+        friendsRequest: action.payload.content,
+        isLoading: false,
+      };
+    case ADD_FRIEND_REQUEST:
+      return {
+        ...state,
+        friendsRequest: [...state.friendsRequest, action.payload],
+        isLoading: false,
+      };
+    case ACCEPT_FRIEND_REQUEST:
+      return {
+        ...state,
+        content: state.content.some((friend) => friend.id === action.payload.id) ? state.content : [...state.content, action.payload],
+        friendsRequest: state.friendsRequest.filter((request) => request.id !== action.payload.id),
+        isLoading: false,
+      };
+    case DECLINE_FRIEND_REQUEST:
+      return {
+        ...state,
+        friendsRequest: state.friendsRequest.filter((request) => request.id !== action.payload.id),
         isLoading: false,
       };
     case IS_LOADING_ON:

@@ -133,7 +133,7 @@ function LibroDetails() {
                     {currentUser ? (
                       <>
                         <Link to={`/profile/${currentUser.id}`}>
-                          <img src={currentUser.avatar} alt={currentUser.username} />
+                          <img src={currentUser.avatar} alt={currentUser.username} className="img-fluid" />
                         </Link>
                       </>
                     ) : (
@@ -192,7 +192,7 @@ function LibroDetails() {
                   {user ? (
                     <>
                       <Link to={`/profile/${user.id}`}>
-                        <img src={user.avatar} alt={user.nome} />
+                        <img src={user.avatar} alt={user.nome} className="img-fluid" />
                       </Link>
                       <p>
                         <Link to={`/profile/${user.id}`}>
