@@ -74,8 +74,8 @@ function LibroDetails() {
     e.preventDefault();
     if (commentText.trim()) {
       await dispatch(addComment(commentText, currentUser.id, reviewId));
-      await dispatch(getCommentByReview(reviewId)); // lo fai sempre
-      setCommentText(""); // svuota il campo
+      await dispatch(getCommentByReview(reviewId));
+      setCommentText("");
     }
   };
 

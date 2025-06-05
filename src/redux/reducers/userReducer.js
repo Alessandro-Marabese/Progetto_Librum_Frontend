@@ -1,4 +1,15 @@
-import { ADD_USER, GET_CURRENT_USER, GET_OTHER_USER, GET_USER_BY_ID, GET_USER_COMMENTS_BY_ID, IS_LOADING_OFF, IS_LOADING_ON, SEARCH_USERS } from "../actions";
+import {
+  ADD_USER,
+  GET_CURRENT_USER,
+  GET_OTHER_USER,
+  GET_USER_BY_ID,
+  GET_USER_COMMENTS_BY_ID,
+  IS_LOADING_OFF,
+  IS_LOADING_ON,
+  SEARCH_USERS,
+  UPDATE_USER,
+  UPDATE_USER_AVATAR,
+} from "../actions";
 
 const initialState = {
   content: [],
@@ -60,6 +71,16 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         ricercaUtenti: action.payload,
+      };
+    case UPDATE_USER:
+      return {
+        ...state,
+        content: state.content.map((user) => (user.id === action.payload.id ? action.payload : user)),
+      };
+    case UPDATE_USER_AVATAR:
+      return {
+        ...state,
+        content: state.content.map((user) => (user.id === action.payload.id ? action.payload : user)),
       };
     default:
       return state;

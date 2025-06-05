@@ -4,6 +4,8 @@ export const GET_USER_COMMENTS_BY_ID = "GET_USER_COMMENTS_BY_ID";
 export const GET_OTHER_USER = "GET_OTHER_USER";
 export const SEARCH_USERS = "SEARCH_USERS";
 export const ADD_USER = "ADD_USER";
+export const UPDATE_USER = "UPDATE_USER";
+export const UPDATE_USER_AVATAR = "UPDATE_USER_AVATAR";
 export const IS_LOADING_ON = "IS_LOADING_ON";
 export const IS_LOADING_OFF = "IS_LOADING_OFF";
 export const GET_BOOKS_BY_TITLE = "GET_BOOKS_BY_TITLE";
@@ -222,6 +224,63 @@ export const searchUsers = (query) => {
       }
     } catch (error) {
       console.log("Errore durante la ricerca degli utenti", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const updateUser = (id, userData) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/utenti/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: UPDATE_USER, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante l'aggiornamento dell'utente");
+      }
+    } catch (error) {
+      console.log("Errore durante l'aggiornamento dell'utente", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const updateUserAvatar = (id, formData) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/utenti/${id}/upload`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: UPDATE_USER_AVATAR, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante l'aggiornamento dell'utente");
+      }
+    } catch (error) {
+      console.log("Errore durante l'aggiornamento dell'utente", error);
     } finally {
       dispatch({ type: IS_LOADING_OFF });
     }

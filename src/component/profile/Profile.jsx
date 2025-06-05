@@ -1,8 +1,10 @@
-import { Col, Container, Row, Image } from "react-bootstrap";
+import { Col, Container, Row, Image, Button } from "react-bootstrap";
 import { getCurrentUser, getFriendsByUser, getReviewsByUser, getUserBookByUser, getViewedUser } from "../../redux/actions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import ModalUpdateUser from "./ModalUpdateUser";
+import ModalUpdateAvatar from "./ModalUpdateAvatar";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -12,7 +14,9 @@ function Profile() {
   const friends = useSelector((state) => state.friends.content);
   const userBooks = useSelector((state) => state.userBook.content);
   const reviews = useSelector((state) => state.reviews.content);
-  console.log(reviews);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
 
   const generiPreferiti = Array.from(new Set(userBooks.flatMap((userbook) => userbook.libro?.nomiGeneri || []))).sort();
 
@@ -22,7 +26,7 @@ function Profile() {
     } else {
       dispatch(getCurrentUser());
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, reloadTrigger]);
 
   const utenteAttuale = id ? utenteVisitato : utente;
 
@@ -52,6 +56,30 @@ function Profile() {
               <p>Surname: {utenteAttuale.cognome}</p>
               <p>Username: {utenteAttuale.username}</p>
               <p>Email: {utenteAttuale.email}</p>
+              <div className="mt-3">
+                <Button className="btn  me-2" onClick={() => setShowEditModal(true)}>
+                  Edit Profile
+                </Button>
+                <ModalUpdateUser
+                  show={showEditModal}
+                  onHide={() => {
+                    setShowEditModal(false);
+                  }}
+                  utente={utente}
+                  onUpdate={() => {
+                    setReloadTrigger((prev) => prev + 1);
+                  }}
+                />
+                <Button className="btn " onClick={() => setShowAvatarModal(true)}>
+                  Change Avatar
+                </Button>
+                <ModalUpdateAvatar
+                  show={showAvatarModal}
+                  onHide={() => setShowAvatarModal(false)}
+                  utente={utente}
+                  onUpdate={() => setReloadTrigger((prev) => prev + 1)}
+                />
+              </div>
             </Col>
           </Row>
           <Row className="justify-content-around">
