@@ -49,8 +49,8 @@ function GeneriSearch() {
             {isLoading ? (
               <Spinner animation="border" />
             ) : (
-              fantasy?.map((book) => (
-                <Col key={book.id} className="col-2">
+              fantasy?.slice(0, 4).map((book) => (
+                <Col key={book.id} className="col-3">
                   <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                     <Card.Img variant="top" src={book.coverUrl} />
                   </Link>
@@ -63,8 +63,8 @@ function GeneriSearch() {
             {isLoading ? (
               <Spinner animation="border" />
             ) : (
-              romance.map((book) => (
-                <Col key={book.id} className="col-2">
+              romance?.slice(0, 4).map((book) => (
+                <Col key={book.id} className="col-3">
                   <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                     <Card.Img variant="top" src={book.coverUrl} />
                   </Link>
@@ -77,8 +77,8 @@ function GeneriSearch() {
             {isLoading ? (
               <Spinner animation="border" />
             ) : (
-              thriller.map((book) => (
-                <Col key={book.id} className="col-2">
+              thriller?.slice(0, 4).map((book) => (
+                <Col key={book.id} className="col-3">
                   <Card>
                     <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                       <Card.Img variant="top" src={book.coverUrl} />

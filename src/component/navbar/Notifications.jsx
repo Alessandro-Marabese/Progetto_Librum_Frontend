@@ -6,8 +6,6 @@ import { Button, Dropdown } from "react-bootstrap";
 function Notifications({ utente }) {
   const dispatch = useDispatch();
   const [requests, setRequests] = useState([]);
-  console.log(requests);
-  console.log(utente);
 
   useEffect(() => {
     const fetchRequests = async () => {

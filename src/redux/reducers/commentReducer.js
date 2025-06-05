@@ -1,4 +1,4 @@
-import { ADD_COMMENT, DELETE_COMMENT, GET_COMMENTS_BY_REVIEW, GET_COMMENTS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON } from "../actions";
+import { ADD_COMMENT, DELETE_COMMENT, GET_COMMENTS_BY_REVIEW, GET_COMMENTS_BY_USER, IS_LOADING_OFF, IS_LOADING_ON, UPDATE_COMMENT } from "../actions";
 
 const initialState = {
   commentsByReview: {},
@@ -38,13 +38,19 @@ const commentReducer = (state = initialState, action) => {
         },
       };
     }
-    case DELETE_COMMENT: {
-      const { reviewId, commentId } = action.payload;
+    case UPDATE_COMMENT: {
+      const { commentId, content } = action.payload;
       return {
         ...state,
-        commentsByReview: {
-          ...state.commentsByReview,
-          [reviewId]: state.commentsByReview[reviewId].filter((comment) => comment.id !== commentId),
+        commentsByUser: state.commentsByUser.map((comment) => (comment.id === commentId ? { ...comment, content } : comment)),
+      };
+    }
+    case DELETE_COMMENT: {
+      return {
+        ...state,
+        commentsByUser: {
+          ...state.commentsByUser,
+          content: state.commentsByUser.content.filter((comment) => comment.id !== action.payload),
         },
       };
     }

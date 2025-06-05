@@ -28,6 +28,7 @@ export const GET_COMMENTS_BY_REVIEW = "GET_COMMENTS_BY_REVIEW";
 export const GET_COMMENTS_BY_USER = "GET_COMMENTS_BY_USER";
 export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";
+export const UPDATE_COMMENT = "UPDATE_COMMENT";
 export const GET_FRIENDS = "GET_FRIENDS";
 export const GET_FRIENDS_REQUESTS = "GET_FRIENDS_REQUESTS";
 export const ADD_FRIEND_REQUEST = "ADD_FRIEND_REQUEST";
@@ -821,10 +822,39 @@ export const addComment = (testo, utenteId, reviewId) => {
   };
 };
 
-export const deleteComment = (commentId, reviewId) => {
+export const updateComment = (commentId, testo, utenteId, reviewId) => {
   return async (dispatch) => {
     try {
-      dispatch({ type: IS_LOADING_ON, reviewId });
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/commenti/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ testo, utenteId, reviewId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: UPDATE_COMMENT, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante l'aggiornamento del commento");
+      }
+    } catch (error) {
+      console.log("Errore durante l'aggiornamento del commento", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
+export const deleteComment = (commentId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
       const response = await fetch(`${apiUrl}/commenti/${commentId}`, {
@@ -835,7 +865,7 @@ export const deleteComment = (commentId, reviewId) => {
       });
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: DELETE_COMMENT, payload: { reviewId, commentId } });
+        dispatch({ type: DELETE_COMMENT, payload: { commentId } });
         return data;
       } else {
         throw new Error("Errore durante la cancellazione del commento");
@@ -843,7 +873,7 @@ export const deleteComment = (commentId, reviewId) => {
     } catch (error) {
       console.log("Errore durante la cancellazione del commento", error);
     } finally {
-      dispatch({ type: IS_LOADING_OFF, reviewId });
+      dispatch({ type: IS_LOADING_OFF });
     }
   };
 };

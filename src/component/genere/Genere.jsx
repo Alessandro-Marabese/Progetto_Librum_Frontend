@@ -11,12 +11,10 @@ function Genere() {
   const books = searchedGenre?.books || [];
   const isLoading = useSelector((state) => state.genres.isLoading);
   console.log(books);
-  console.log("searchedGenre:", searchedGenre);
   useEffect(() => {
     if (genereName) {
       dispatch(getBooksByGenre(genereName));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, genereName]);
   return (
     <Container>
