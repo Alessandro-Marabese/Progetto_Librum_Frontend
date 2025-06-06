@@ -1,0 +1,17 @@
+.modal-backdrop.show {
+  opacity: 0.1 !important;
+}
+
+.mybooks-second-list li {
+  list-style-type: none;
+}
+
+.mybooks-first-list li {
+  cursor: pointer;
+  text-decoration: none;
+  list-style-type: none;
+}
+
+.mybooks-first-list li:hover {
+  text-decoration: underline;
+}
