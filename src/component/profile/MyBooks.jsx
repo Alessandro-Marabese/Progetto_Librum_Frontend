@@ -17,6 +17,11 @@ function MyBooks() {
   const isLoadingReviews = books?.length > 0 && reviewsByUser.length === 0;
   const [title, setTitle] = useState("");
 
+  const wantToReadCount = books.filter((book) => book.statoLettura === "WANT_TO_READ").length;
+  const currentlyReadingCount = books.filter((book) => book.statoLettura === "CURRENTLY_READING").length;
+  const readCount = books.filter((book) => book.statoLettura === "READ").length;
+  const allBooksCount = books.length;
+
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
@@ -86,24 +91,22 @@ function MyBooks() {
         </Form>
       </div>
       <Row>
-        <Col className="col-3">
+        <Col className="col-3 mt-3">
           <h3>My Bookshelves</h3>
-          <ul>
-            <li onClick={() => setSelectedShelf("WANT_TO_READ")}>Want to Read </li>
-            <li onClick={() => setSelectedShelf("CURRENTLY_READING")}>Currently Reading</li>
-            <li onClick={() => setSelectedShelf("READ")}>Read</li>
-            <li onClick={() => setSelectedShelf(null)}>All Books</li>
+          <ul className="mybooks-first-list">
+            <li onClick={() => setSelectedShelf("WANT_TO_READ")}>Want to Read ({wantToReadCount}) </li>
+            <li onClick={() => setSelectedShelf("CURRENTLY_READING")}>Currently Reading ({currentlyReadingCount})</li>
+            <li onClick={() => setSelectedShelf("READ")}>Read ({readCount})</li>
+            <li onClick={() => setSelectedShelf(null)}>All Books ({allBooksCount})</li>
           </ul>
         </Col>
-        <Col className="col-9">
-          <Row>
-            <ul className="d-flex">
-              <li className="me-4">Cover</li>
-              <li className="me-4">Title</li>
-              <li className="me-4">Author</li>
-              <li className="me-4">My Rating</li>
-              <li className="me-4">Bookshelves</li>
-            </ul>
+        <Col className="col-9 mt-4">
+          <Row className="mb-4">
+            <Col>Cover</Col>
+            <Col>Title</Col>
+            <Col>Author</Col>
+            <Col>My Rating</Col>
+            <Col>Bookshelf</Col>
           </Row>
           {filteredBooks &&
             filteredBooks.map((book) => {

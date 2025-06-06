@@ -23,8 +23,15 @@ function NavBar() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = "/";
+  };
+
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" sticky="top" className="bg-body-tertiary">
       <Container className="w-75">
         <Navbar.Brand as={Link} to="/homepage">
           Librum
@@ -86,10 +93,7 @@ function NavBar() {
               </Dropdown.Item>
               <Dropdown.Item eventKey="3">Discussions</Dropdown.Item>
               <Dropdown.Divider />
-              <Dropdown.Item eventKey="4">Account Settings</Dropdown.Item>
-              <Dropdown.Item as={Link} to={"/"}>
-                Log Out
-              </Dropdown.Item>
+              <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>

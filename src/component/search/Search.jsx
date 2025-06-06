@@ -69,7 +69,7 @@ function Search() {
             <Row></Row>
           ) : (
             books.map((book, index) => (
-              <Row key={index}>
+              <Row key={index} className="mb-3">
                 <Col className="col-3">
                   <img src={book.coverUrl} alt={book.titolo} className="img-fluid" />
                 </Col>

@@ -11,8 +11,8 @@ function Comments() {
   const comments = useSelector((state) => state.comments?.commentsByUser);
   const [showModal, setShowModal] = useState(false);
   const [selectedComment, setSelectedComment] = useState(null);
-  console.log(currentUser);
-  console.log(comments);
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     dispatch(getCurrentUser());
@@ -20,13 +20,23 @@ function Comments() {
 
   useEffect(() => {
     if (currentUser) {
-      dispatch(getCommentByUser(currentUser.id));
+      setPage(0);
+      setHasMore(true);
+      dispatch(getCommentByUser(currentUser.id, 0, true));
     }
   }, [dispatch, currentUser]);
 
   const handleDeleteComment = (commentId) => {
     dispatch(deleteComment(commentId)).then(() => {
-      dispatch(getCommentByUser(currentUser.id));
+      dispatch(getCommentByUser(currentUser.id, page, true));
+    });
+  };
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    dispatch(getCommentByUser(currentUser.id, nextPage)).then((data) => {
+      if (data?.last) setHasMore(false);
+      setPage(nextPage);
     });
   };
 
@@ -78,6 +88,7 @@ function Comments() {
                   </Row>
                 );
               })}
+          {hasMore && <Button onClick={handleLoadMore}>Load more comments</Button>}
         </Col>
         <Col className="col-3">
           <Link to={`/profile/${currentUser.id}`}>Back to profile</Link>

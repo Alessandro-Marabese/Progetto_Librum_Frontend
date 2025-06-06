@@ -82,7 +82,7 @@ function LibroDetails() {
   return (
     <Container>
       <Row>
-        <Col className="col-3">
+        <Col className="col-3 position-sticky">
           <img src={book.coverUrl} alt={book.titolo} className="img-fluid" />
           <Button onClick={() => setModalShow(true)}>Want to Read</Button>
           <WantToReadModal show={modalShow} onHide={() => setModalShow(false)} book={book} currentUser={currentUser} />
@@ -107,14 +107,32 @@ function LibroDetails() {
             {author ? (
               <Row>
                 <Col className="col-3">
-                  <img src={author.photoUrl} alt={author.name} className="img-fluid" />
+                  {author.photoUrl ? (
+                    <img src={author.photoUrl} alt={author.name} className="img-fluid" />
+                  ) : (
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "150px",
+                        backgroundColor: "#eee",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#666",
+                        fontStyle: "italic",
+                        textAlign: "center",
+                      }}
+                    >
+                      Nessuna immagine disponibile per questo autore
+                    </div>
+                  )}
                 </Col>
                 <Col className="col-9">
                   <h3>
                     <Link to={`/autore/${book.nomiAutori?.[0]}`}>{book.nomiAutori?.[0] || "Autore sconosciuto"}</Link>
                   </h3>
                 </Col>
-                <p>{author.bio}</p>
+                {author.bio ? <p>{author.bio}</p> : <p>Biografia non disponibile per questo autore.</p>}
               </Row>
             ) : (
               <Placeholder as="p" animation="glow">

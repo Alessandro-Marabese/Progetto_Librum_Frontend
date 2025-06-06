@@ -21,6 +21,7 @@ export const DELETE_USERBOOK = "DELETE_USERBOOK";
 export const GET_REVIEWS_BY_BOOK = "GET_REVIEWS_BY_BOOK";
 export const GET_REVIEWS_BY_BOOK_MYBOOKS = "GET_REVIEWS_BY_BOOK_MYBOOKS";
 export const GET_REVIEWS_BY_USER = "GET_REVIEWS_BY_USER";
+export const GET_REVIEWS_BY_USER_HOMEPAGE = "GET_REVIEWS_BY_USER_HOMEPAGE";
 export const ADD_REVIEW = "ADD_REVIEW";
 export const DELETE_REVIEW = "DELETE_REVIEW";
 export const UPDATE_REVIEW = "UPDATE_REVIEW";
@@ -643,6 +644,33 @@ export const getReviewsByUser = (userId) => {
   };
 };
 
+export const getReviewsByUserHomepage = (utenteId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/review/utente/${utenteId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_REVIEWS_BY_USER_HOMEPAGE, payload: { utenteId, reviews: data } });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero delle recensioni dell'utente");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero delle recensioni dell'utente", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+
 export const addReview = (review) => {
   return async (dispatch) => {
     try {
@@ -756,13 +784,13 @@ export const getCommentByReview = (reviewId) => {
   };
 };
 
-export const getCommentByUser = (userId) => {
+export const getCommentByUser = (userId, page = 0, reset = false) => {
   return async (dispatch) => {
     try {
       dispatch({ type: IS_LOADING_ON });
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
-      const response = await fetch(`${apiUrl}/commenti/utente/${userId}`, {
+      const response = await fetch(`${apiUrl}/commenti/utente/${userId}?page=${page}&size=10`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -770,7 +798,7 @@ export const getCommentByUser = (userId) => {
       });
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: GET_COMMENTS_BY_USER, payload: data });
+        dispatch({ type: GET_COMMENTS_BY_USER, payload: data, reset });
         return data;
       } else {
         throw new Error("Errore durante il recupero dei commenti dell'utente");

@@ -25,7 +25,12 @@ const commentReducer = (state = initialState, action) => {
     case GET_COMMENTS_BY_USER:
       return {
         ...state,
-        commentsByUser: action.payload,
+        commentsByUser: action.reset
+          ? action.payload
+          : {
+              ...action.payload,
+              content: [...(state.commentsByUser?.content || []), ...action.payload.content],
+            },
         isLoading: false,
       };
     case ADD_COMMENT: {
@@ -49,8 +54,8 @@ const commentReducer = (state = initialState, action) => {
       return {
         ...state,
         commentsByUser: {
-          ...state.commentsByUser,
-          content: state.commentsByUser.content.filter((comment) => comment.id !== action.payload),
+          ...action.payload,
+          content: action.reset ? action.payload.content : [...(state.commentsByUser?.content || []), ...action.payload.content],
         },
       };
     }

@@ -29,35 +29,67 @@ function AutoreDetails() {
     <Container>
       <Row>
         <Col className="col-3">
-          <img src={author.photoUrl} alt={author.name} className="img-fluid" />
+          {author.photoUrl ? (
+            <img src={author.photoUrl} alt={author.name} className="img-fluid" />
+          ) : (
+            <div
+              style={{
+                width: "100%",
+                height: "150px",
+                backgroundColor: "#eee",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#666",
+                fontStyle: "italic",
+                textAlign: "center",
+              }}
+            >
+              Nessuna immagine disponibile per questo autore
+            </div>
+          )}
         </Col>
         <Col className="col-9">
           <h1 className="border-bottom">{author.name}</h1>
-          <div className="d-flex">
-            <h5>Born</h5>
-            <p>{author.dataNascita}</p>
-          </div>
-          {author.dataMorte ? (
-            <div className="d-flex">
-              <h5>Died</h5>
-              <p>{author.dataMorte}</p>
+          {author.dataNascita ? (
+            <div className="d-flex align-items-baseline">
+              <h5>Born</h5>
+              <p className="ms-3">{author.dataNascita}</p>
             </div>
           ) : (
-            <div></div>
+            <div className="d-flex align-items-baseline">
+              <h5>Born</h5>
+              <p className="ms-3">Non è disponibile la data di nascita di questo autore</p>
+            </div>
+          )}
+          {author.dataMorte ? (
+            <div className="d-flex align-items-baseline">
+              <h5>Died</h5>
+              <p className="ms-3">{author.dataMorte}</p>
+            </div>
+          ) : (
+            <></>
           )}
           <div className="d-flex">
             <h5>Genres</h5>
             {author.generi &&
               author.generi.map((genere) => (
-                <Link to={`/generi/${genere}`} key={genere} className="me-2">
+                <Link to={`/generi/${genere}`} key={genere} className="me-2 ms-3">
                   {genere}
                 </Link>
               ))}
           </div>
-          <div>
-            <h5>Biography</h5>
-            <p>{author.bio}</p>
-          </div>
+          {author.bio ? (
+            <div>
+              <h5>Biography</h5>
+              <p className="ms-3">{author.bio}</p>
+            </div>
+          ) : (
+            <div>
+              <h5>Biography</h5>
+              <p>Non è disponibile la biografia di questo autore</p>
+            </div>
+          )}
         </Col>
       </Row>
       <Row>

@@ -13,6 +13,7 @@ function GeneriSearch() {
   const thriller = useSelector((state) => state.genres.thriller.content) || [];
   const allGenres = useSelector((state) => state.genres.content) || [];
   const navigate = useNavigate();
+  const placeholderCount = 4;
   console.log(allGenres);
 
   useEffect(() => {
@@ -46,47 +47,53 @@ function GeneriSearch() {
           </div>
           <Row>
             <h3>Fantasy</h3>
-            {isLoading ? (
-              <Spinner animation="border" />
-            ) : (
-              fantasy?.slice(0, 4).map((book) => (
-                <Col key={book.id} className="col-3">
-                  <Link to={`/libro/${encodeURIComponent(book.id)}`}>
-                    <Card.Img variant="top" src={book.coverUrl} />
-                  </Link>
-                </Col>
-              ))
-            )}
-          </Row>
-          <Row>
-            <h3>Romance</h3>
-            {isLoading ? (
-              <Spinner animation="border" />
-            ) : (
-              romance?.slice(0, 4).map((book) => (
-                <Col key={book.id} className="col-3">
-                  <Link to={`/libro/${encodeURIComponent(book.id)}`}>
-                    <Card.Img variant="top" src={book.coverUrl} />
-                  </Link>
-                </Col>
-              ))
-            )}
-          </Row>
-          <Row>
-            <h3>Thriller</h3>
-            {isLoading ? (
-              <Spinner animation="border" />
-            ) : (
-              thriller?.slice(0, 4).map((book) => (
-                <Col key={book.id} className="col-3">
-                  <Card>
+            {isLoading
+              ? Array.from({ length: placeholderCount }).map((_, idx) => (
+                  <Col key={idx} className="col-3 mb-3">
+                    <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+                  </Col>
+                ))
+              : fantasy?.slice(0, 4).map((book) => (
+                  <Col key={book.id} className="col-3">
                     <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                       <Card.Img variant="top" src={book.coverUrl} />
                     </Link>
-                  </Card>
-                </Col>
-              ))
-            )}
+                  </Col>
+                ))}
+          </Row>
+          <Row>
+            <h3>Romance</h3>
+            {isLoading
+              ? Array.from({ length: placeholderCount }).map((_, idx) => (
+                  <Col key={idx} className="col-3 mb-3">
+                    <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+                  </Col>
+                ))
+              : romance?.slice(0, 4).map((book) => (
+                  <Col key={book.id} className="col-3">
+                    <Link to={`/libro/${encodeURIComponent(book.id)}`}>
+                      <Card.Img variant="top" src={book.coverUrl} />
+                    </Link>
+                  </Col>
+                ))}
+          </Row>
+          <Row>
+            <h3>Thriller</h3>
+            {isLoading
+              ? Array.from({ length: placeholderCount }).map((_, idx) => (
+                  <Col key={idx} className="col-3 mb-3">
+                    <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+                  </Col>
+                ))
+              : thriller?.slice(0, 4).map((book) => (
+                  <Col key={book.id} className="col-3">
+                    <Card>
+                      <Link to={`/libro/${encodeURIComponent(book.id)}`}>
+                        <Card.Img variant="top" src={book.coverUrl} />
+                      </Link>
+                    </Card>
+                  </Col>
+                ))}
           </Row>
         </Col>
         <Col className="col-2">

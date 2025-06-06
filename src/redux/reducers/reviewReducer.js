@@ -4,6 +4,7 @@ import {
   GET_REVIEWS_BY_BOOK,
   GET_REVIEWS_BY_BOOK_MYBOOKS,
   GET_REVIEWS_BY_USER,
+  GET_REVIEWS_BY_USER_HOMEPAGE,
   IS_LOADING_OFF,
   IS_LOADING_ON,
   UPDATE_REVIEW,
@@ -12,6 +13,7 @@ import {
 const initialState = {
   content: [],
   reviewsByBook: {},
+  reviewsByUsers: [],
   isLoading: false,
   isError: null,
 };
@@ -38,6 +40,12 @@ const reviewReducer = (state = initialState, action) => {
       return {
         ...state,
         content: action.payload,
+        isLoading: false,
+      };
+    case GET_REVIEWS_BY_USER_HOMEPAGE:
+      return {
+        ...state,
+        reviewsByUsers: [...(state.reviewsByUsers || []), ...(action.payload.reviews.content || [])],
         isLoading: false,
       };
     case ADD_REVIEW:
