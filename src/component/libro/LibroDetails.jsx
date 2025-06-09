@@ -17,7 +17,8 @@ function LibroDetails() {
   const book = useMemo(() => rawBook || {}, [rawBook]);
   const author = useSelector((state) => state.authors?.content) || [];
   const currentUser = useSelector((state) => state.users?.content);
-  const reviews = useSelector((state) => state.reviews?.content?.content) || [];
+  const reviewsState = useSelector((state) => state.reviews);
+  const reviews = useMemo(() => reviewsState?.content?.content || [], [reviewsState]);
   const myReview = reviews.find((r) => r.utenteId === currentUser?.id);
   const usersReviewsById = useSelector((state) => state.users.userReviews || {});
   const usersCommentsById = useSelector((state) => state.users.userComments || {});

@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { Button, Form, FormControl, FormLabel } from "react-bootstrap";
 import { registerUser, loginUser } from "../../redux/actions";
+import "./LoginPage.css";
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -35,35 +36,38 @@ function LoginPage() {
   };
 
   return (
-    <div className="w-50 h-75 m-auto">
-      <h1>{isLogin ? "Login" : "Registrazione"}</h1>
-      {isLogin ? (
-        <Form onSubmit={(event) => handleLogin(event)}>
-          <Form.Label>username</Form.Label>
-          <Form.Control type="text" />
-          <Form.Label>password</Form.Label>
-          <Form.Control type="password" />
-          <Button type="submit">login</Button>
-        </Form>
-      ) : (
-        <Form onSubmit={(event) => handleRegister(event)}>
-          <FormLabel>Nome</FormLabel>
-          <FormControl type="text" placeholder="Nome" />
-          <FormLabel>Cognome</FormLabel>
-          <FormControl type="text" placeholder="Cognome" />
-          <FormLabel>Username</FormLabel>
-          <FormControl type="text" placeholder="username" />
-          <FormLabel>Email</FormLabel>
-          <FormControl type="email" placeholder="email" />
-          <FormLabel>Password</FormLabel>
-          <FormControl type="password" placeholder="password" />
-          <Button type="submit">Registrati</Button>
-        </Form>
-      )}
-      <div className="mt-3">
-        <Button variant="secondary" onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Vai alla registrazione" : "Hai già un account? Login"}
-        </Button>
+    <div className="login-page-background">
+      <div id="login-form">
+        <h1 className="app-title">Librum</h1>
+        <h3>{isLogin ? "Login" : "Registrati"}</h3>
+        {isLogin ? (
+          <Form onSubmit={(event) => handleLogin(event)}>
+            <Form.Label className="mb-2">username</Form.Label>
+            <Form.Control type="text" className="mb-2" placeholder="Inserisci il tuo username" required />
+            <Form.Label className="mb-2">password</Form.Label>
+            <Form.Control type="password" className="mb-2" placeholder="Inserisci la tua password" required />
+            <Button type="submit">Login</Button>
+          </Form>
+        ) : (
+          <Form onSubmit={(event) => handleRegister(event)}>
+            <FormLabel className="mb-2">Nome</FormLabel>
+            <FormControl type="text" placeholder="Inserisci il tuo nome" className="mb-2" required />
+            <FormLabel className="mb-2">Cognome</FormLabel>
+            <FormControl type="text" placeholder="Inserisci il tuo cognome" className="mb-2" required />
+            <FormLabel className="mb-2">Username</FormLabel>
+            <FormControl type="text" placeholder="Scegli il tuo username" className="mb-2" required />
+            <FormLabel className="mb-2">Email</FormLabel>
+            <FormControl type="email" placeholder="Inserisci la tua email" className="mb-2" required />
+            <FormLabel className="mb-2">Password</FormLabel>
+            <FormControl type="password" placeholder="Scegli la password" className="mb-3" required />
+            <Button type="submit">Registrati</Button>
+          </Form>
+        )}
+        <div className="mt-2 button-container">
+          <Button variant="secondary" onClick={() => setIsLogin(!isLogin)} id="login-button">
+            {isLogin ? "Vai alla registrazione" : "Hai già un account? Login"}
+          </Button>
+        </div>
       </div>
     </div>
   );

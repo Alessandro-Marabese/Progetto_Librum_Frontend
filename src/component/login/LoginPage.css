@@ -1,0 +1,47 @@
+.login-page-background {
+  background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"); /* immagine libri */
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Contenitore del form */
+#login-form {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.3);
+  width: 25rem;
+}
+
+#login-form label,
+#login-form .form-label {
+  text-align: left;
+  display: block;
+}
+
+/* Bottone principale allineato a sinistra */
+#login-form button {
+  display: block;
+  margin-top: 1rem;
+  margin-left: auto;
+}
+
+/* Titolo app */
+.app-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.625rem;
+  color: #3a3a3a;
+  font-family: "Georgia", serif;
+  text-align: center;
+}
+
+/* Contenitore dei pulsanti in basso */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
