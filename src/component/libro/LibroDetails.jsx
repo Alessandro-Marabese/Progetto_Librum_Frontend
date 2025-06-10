@@ -6,6 +6,7 @@ import { getAuthorByName, getBookById, getCommentByReview, getCurrentUser, getRe
 import { Link } from "react-router-dom";
 import WantToReadModal from "./WantToReadModal";
 import ReviewModal from "./ReviewModal";
+import "./LibroDetails.css";
 
 function LibroDetails() {
   const dispatch = useDispatch();
@@ -81,20 +82,20 @@ function LibroDetails() {
   };
 
   return (
-    <Container>
-      <Row>
-        <Col className="col-3 position-sticky">
+    <Container className="bookdetail-container">
+      <Row className="bookdetail-row">
+        <Col className="bookdetail-cover-col col-3">
           <img src={book.coverUrl} alt={book.titolo} className="img-fluid" />
           <Button onClick={() => setModalShow(true)}>Want to Read</Button>
           <WantToReadModal show={modalShow} onHide={() => setModalShow(false)} book={book} currentUser={currentUser} />
         </Col>
-        <Col className="col-9">
+        <Col className="bookdetail-content-col col-9">
           <h1>{book.titolo}</h1>
           <h3>
             <Link to={`/autore/${book.nomiAutori?.[0]}`}>{book.nomiAutori?.[0] || "Autore sconosciuto"}</Link>
           </h3>
           <p>{book.descrizione}</p>
-          <div className="d-flex">
+          <div className="genres-links d-flex">
             {book.nomiGeneri &&
               book.nomiGeneri.map((genere) => (
                 <Link to={`/generi/${genere}`} key={genere} className="me-2">
@@ -102,33 +103,19 @@ function LibroDetails() {
                 </Link>
               ))}
           </div>
-          <p className="border-bottom">First published in {book.primoAnnoPubblicazione}</p>
-          <div>
+          <p className="section-divider border-bottom">First published in {book.primoAnnoPubblicazione}</p>
+          <div className="author-section">
             <h2>About the Author</h2>
             {author ? (
-              <Row>
-                <Col className="col-3">
+              <Row className="author-info-row">
+                <Col className="col-3 author-photo-col">
                   {author.photoUrl ? (
                     <img src={author.photoUrl} alt={author.name} className="img-fluid" />
                   ) : (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "150px",
-                        backgroundColor: "#eee",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#666",
-                        fontStyle: "italic",
-                        textAlign: "center",
-                      }}
-                    >
-                      Nessuna immagine disponibile per questo autore
-                    </div>
+                    <div className="no-photo">Nessuna immagine disponibile per questo autore</div>
                   )}
                 </Col>
-                <Col className="col-9">
+                <Col className="col-9 author-bio-col">
                   <h3>
                     <Link to={`/autore/${book.nomiAutori?.[0]}`}>{book.nomiAutori?.[0] || "Autore sconosciuto"}</Link>
                   </h3>
@@ -141,25 +128,25 @@ function LibroDetails() {
               </Placeholder>
             )}
           </div>
-          <Row>
+          <Row className="review-section">
             <h2>Rating and Reviews</h2>
             <Col>
               <h3>My Reviews</h3>
 
               {myReview ? (
-                <Row>
-                  <Col className="col-3">
+                <Row className="my-review-row">
+                  <Col className="my-review-user-col col-3">
                     {currentUser ? (
                       <>
                         <Link to={`/profile/${currentUser.id}`}>
-                          <img src={currentUser.avatar} alt={currentUser.username} className="img-fluid" />
+                          <img src={currentUser.avatar} alt={currentUser.username} className="img-fluid rounded-circle" />
                         </Link>
                       </>
                     ) : (
                       <Spinner animation="border" />
                     )}
                   </Col>
-                  <Col className="col-9">
+                  <Col className="col-9 my-review-content-col">
                     <p>{myReview.commento}</p>
                     <div>
                       {[1, 2, 3, 4, 5].map((num) => (
@@ -206,12 +193,12 @@ function LibroDetails() {
           {reviews.map((review) => {
             const user = usersReviewsById[review.utenteId];
             return (
-              <Row key={review.id}>
-                <Col className="col-3">
+              <Row key={review.id} className="community-review-row">
+                <Col className="community-review-user-col col-3">
                   {user ? (
                     <>
                       <Link to={`/profile/${user.id}`}>
-                        <img src={user.avatar} alt={user.nome} className="img-fluid" />
+                        <img src={user.avatar} alt={user.nome} className="img-fluid rounded-circle" />
                       </Link>
                       <p>
                         <Link to={`/profile/${user.id}`}>
@@ -223,7 +210,7 @@ function LibroDetails() {
                     <Spinner animation="border" />
                   )}
                 </Col>
-                <Col className="col-9">
+                <Col className="community-review-content-col col-9">
                   <p>{review.commento}</p>
                   <div>
                     {[1, 2, 3, 4, 5].map((num) => (
@@ -242,7 +229,7 @@ function LibroDetails() {
                   <p>{review.dataCreazione}</p>
                   <Button onClick={() => toggleComments(review.id)}>{activeReviewIds.includes(review.id) ? "Hide Comments" : "Show Comments"}</Button>
                   {activeReviewIds.includes(review.id) && (
-                    <div className="mt-2">
+                    <div className="comment-section">
                       {isLoadingByReview[review.id] ? (
                         <Spinner animation="border" size="sm" />
                       ) : (
@@ -250,15 +237,10 @@ function LibroDetails() {
                           {(commentsByReview[review.id] || []).content.map((comment) => {
                             const userComment = usersCommentsById[comment.utenteId];
                             return (
-                              <div key={comment.id} className="d-flex align-items-start mb-2">
+                              <div key={comment.id} className="comment-item">
                                 {userComment ? (
                                   <Link to={`/profile/${userComment.id}`}>
-                                    <img
-                                      src={userComment.avatar}
-                                      alt={userComment.nome}
-                                      className="rounded-circle me-2"
-                                      style={{ width: "32px", height: "32px", objectFit: "cover" }}
-                                    />
+                                    <img src={userComment.avatar} alt={userComment.nome} className="rounded-circle" />
                                   </Link>
                                 ) : (
                                   <Spinner animation="border" size="sm" className="me-2" />
@@ -282,7 +264,7 @@ function LibroDetails() {
                         </>
                       )}
                       <div>
-                        <Form className="d-flex" onSubmit={(e) => handleAddComment(e, review.id)}>
+                        <Form className="comment-form d-flex mt-2" onSubmit={(e) => handleAddComment(e, review.id)}>
                           <Form.Control placeholder="Add Comment" className="me-2" value={commentText} onChange={(e) => setCommentText(e.target.value)} />
                           <Button variant="outline-success" type="submit">
                             Add new comment

@@ -1,0 +1,137 @@
+.authordetail-container {
+  background-color: #fdfbf8;
+  font-family: "Georgia", serif;
+  padding: 2rem 0;
+  color: #3c3c3c;
+}
+
+.authordetail-row {
+  align-items: flex-start;
+}
+
+.authordetail-photo-col {
+  text-align: center;
+}
+.authordetail-photo-col img,
+.authordetail-photo-col .no-photo {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.authordetail-info-col h1 {
+  font-size: 2rem;
+  color: var(--color-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.authordetail-meta {
+  margin-bottom: 1rem;
+}
+.authordetail-meta h5 {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--color-secondary);
+}
+.authordetail-meta p {
+  margin: 0;
+  margin-left: var(--spacing-md);
+  font-size: 1rem;
+  color: #3c3c3c;
+}
+
+.authordetail-genres {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.authordetail-genres h5 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-secondary);
+}
+.authordetail-genres a {
+  margin-left: var(--spacing-md);
+  color: #3c3c3c;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.authordetail-genres a:hover {
+  color: #7c2e1c;
+  text-decoration: underline;
+}
+
+.author-genres a {
+  color: #3c3c3c;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.author-genres a:hover {
+  color: #7c2e1c;
+  text-decoration: underline;
+}
+.authordetail-bio {
+  margin-bottom: 2rem;
+}
+.authordetail-bio h5 {
+  font-size: 1.2rem;
+  color: var(--color-secondary);
+  margin-bottom: 0.5rem;
+}
+.authordetail-bio p {
+  margin: 0;
+  margin-left: var(--spacing-md);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.authordetail-books h4 {
+  font-size: 1.6rem;
+  color: var(--color-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.authordetail-book-row {
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1rem;
+}
+.authordetail-book-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.authordetail-book-cover img {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.authordetail-book-info a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.authordetail-book-info a:hover {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+.authordetail-book-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}

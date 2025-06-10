@@ -16,11 +16,11 @@ function WantToReadModal(props) {
     props.onHide();
   };
   return (
-    <Modal size="xs" aria-labelledby="contained-modal-title-vcenter" centered show={props.show} onHide={props.onHide}>
+    <Modal className="add-book-modal" size="xs" aria-labelledby="contained-modal-title-vcenter" centered show={props.show} onHide={props.onHide}>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Add Book</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="d-block">
+      <Modal.Body>
         <Button onClick={() => handleAddUserBook("WANT_TO_READ")}>Want to Read</Button>
         <Button onClick={() => handleAddUserBook("CURRENTLY_READING")}>Currently reading</Button>
         <Button onClick={() => handleAddUserBook("READ")}>Read</Button>

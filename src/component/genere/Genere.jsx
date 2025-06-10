@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Placeholder } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { getBooksByGenre } from "../../redux/actions";
 import { Link, useParams } from "react-router-dom";
+import "./Genere.css";
 
 function Genere() {
   const { genereName } = useParams();
@@ -19,20 +20,20 @@ function Genere() {
   }, [dispatch, genereName]);
 
   return (
-    <Container>
-      <div className="d-flex align-items-center justify-content-between">
+    <Container className="genre-detail-container">
+      <div className="genre-header d-flex align-items-center justify-content-between">
         <h1>{genereName.toUpperCase()}</h1>
         <Link to={"/generi"}>Back to All Genres</Link>
       </div>
-      <Row>
+      <Row className="genre-grid">
         {isLoading
           ? Array.from({ length: placeholderCount }).map((_, idx) => (
-              <Col key={idx} className="col-3 mb-3">
-                <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+              <Col key={idx} className="genre-item col-3 mb-3">
+                <Card></Card>
               </Col>
             ))
           : books?.content?.map((book) => (
-              <Col key={book.id} className="col-3">
+              <Col key={book.id} className="genre-item col-3">
                 <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                   <Card.Img variant="top" src={book.coverUrl} />
                 </Link>

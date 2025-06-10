@@ -1,0 +1,334 @@
+.bookdetail-container {
+  background-color: #fdfbf8;
+  font-family: "Georgia", serif;
+  padding: 2rem 0;
+  color: #3c3c3c;
+}
+
+.bookdetail-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.bookdetail-cover-col {
+  position: sticky;
+  top: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.bookdetail-cover-col img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.bookdetail-cover-col .btn {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease-in-out;
+  margin-bottom: 0.5rem;
+}
+.bookdetail-cover-col .btn:hover {
+  background-color: #5a2115;
+}
+
+.bookdetail-content-col h1 {
+  font-size: 2rem;
+  color: var(--color-secondary);
+  margin-bottom: 0.5rem;
+}
+.bookdetail-content-col h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+.bookdetail-content-col a {
+  color: #3c3c3c;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.bookdetail-content-col a:hover {
+  color: #7c2e1c;
+  text-decoration: underline;
+}
+.bookdetail-content-col p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.genres-links a {
+  margin-right: 0.5rem;
+  color: #3c3c3c;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.genres-links a:hover {
+  color: #7c2e1c;
+  text-decoration: underline;
+}
+
+.section-divider {
+  border-bottom: 1px solid var(--color-border);
+  margin: 1rem 0;
+  padding-bottom: 1rem;
+}
+
+.author-section {
+  margin-top: 2rem;
+}
+.author-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+.author-info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.author-photo-col img,
+.author-photo-col .no-photo {
+  width: 100%;
+  max-width: 150px;
+  height: 150px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.review-section {
+  margin-top: 2rem;
+}
+.review-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.review-section .btn {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+.review-section .btn:hover {
+  background-color: #5a2115;
+}
+
+.my-review-row {
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 1.5rem;
+}
+.my-review-user-col {
+  text-align: center;
+}
+.my-review-user-col img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.my-review-content-col p {
+  margin-bottom: 0.5rem;
+}
+.my-review-content-col .btn {
+  margin-top: 0.5rem;
+}
+
+.community-review-row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.community-review-user-col {
+  text-align: center;
+}
+.community-review-user-col img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.community-review-content-col p {
+  margin-bottom: 0.5rem;
+}
+.community-review-content-col .btn {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+.community-review-content-col .btn:hover {
+  background-color: #5a2115;
+}
+
+.comment-section {
+  margin-top: 1rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-border);
+}
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.comment-item img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+}
+.comment-item p {
+  margin: 0;
+}
+.comment-item .comment-date {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+.comment-form {
+  margin-top: 1rem;
+}
+.comment-form .form-control {
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.modal-content {
+  background-color: #fdfbf8;
+  font-family: "Georgia", serif;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-secondary);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-body .form-control {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.modal-body textarea.form-control {
+  resize: vertical;
+}
+
+.modal-footer,
+.modal-body .d-flex.justify-content-end {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-body .btn-secondary {
+  border-radius: 20px;
+  background-color: #ccc;
+  color: #3c3c3c;
+  border: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s;
+}
+.modal-body .btn-secondary:hover {
+  background-color: #bbb;
+}
+
+.modal-body .btn-primary {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+.modal-body .btn-primary:hover {
+  background-color: #5a2115;
+}
+
+.add-book-modal .modal-content {
+  background-color: #fdfbf8;
+  font-family: "Georgia", serif;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.add-book-modal .modal-header {
+  border-bottom: 1px solid #ddd;
+}
+.add-book-modal .modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--color-secondary);
+}
+.add-book-modal .modal-body {
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-evenly;
+}
+.add-book-modal .modal-body .btn {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+.add-book-modal .modal-body .btn:hover {
+  background-color: #5a2115;
+}
+.add-book-modal .modal-footer {
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 1.5rem;
+}
+.add-book-modal .modal-footer .btn {
+  border-radius: 20px;
+  background-color: #ccc;
+  color: #3c3c3c;
+  border: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s;
+}
+.add-book-modal .modal-footer .btn:hover {
+  background-color: #bbb;
+}

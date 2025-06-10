@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import { getAuthorByName, getBooksByAuthorId } from "../../redux/actions";
 import { Container, Row, Col } from "react-bootstrap";
+import "./AutoreDetails.css";
 
 function AutoreDetails() {
   const dispatch = useDispatch();
@@ -26,11 +27,11 @@ function AutoreDetails() {
   }, [dispatch, author.name, author.id, hasLoadedBooks]);
 
   return (
-    <Container>
-      <Row>
-        <Col className="col-3">
+    <Container className="authordetail-container">
+      <Row className="authordetail-row">
+        <Col className="authordetail-photo-col col-3">
           {author.photoUrl ? (
-            <img src={author.photoUrl} alt={author.name} className="img-fluid" />
+            <img src={author.photoUrl} alt={author.name} />
           ) : (
             <div
               style={{
@@ -49,7 +50,7 @@ function AutoreDetails() {
             </div>
           )}
         </Col>
-        <Col className="col-9">
+        <Col className="authordetail-info-col col-9">
           <h1 className="border-bottom">{author.name}</h1>
           {author.dataNascita ? (
             <div className="d-flex align-items-baseline">
@@ -70,7 +71,7 @@ function AutoreDetails() {
           ) : (
             <></>
           )}
-          <div className="d-flex">
+          <div className="author-genres d-flex align-items-baseline mb-2">
             <h5>Genres</h5>
             {author.generi &&
               author.generi.map((genere) => (
@@ -82,7 +83,7 @@ function AutoreDetails() {
           {author.bio ? (
             <div>
               <h5>Biography</h5>
-              <p className="ms-3">{author.bio}</p>
+              <p>{author.bio}</p>
             </div>
           ) : (
             <div>
@@ -92,18 +93,18 @@ function AutoreDetails() {
           )}
         </Col>
       </Row>
-      <Row>
+      <Row className="authordetail-books">
         <Col>
           <h4 className="border-bottom">
             {author.name}'s books: {books.length}
           </h4>
           {books &&
             books.map((book) => (
-              <Row key={book.id}>
-                <Col className="col-3">
+              <Row key={book.id} className="authordetail-book-row">
+                <Col className="authordetail-book-cover col-3">
                   <img src={book.coverUrl} alt={book.titolo} className="img-fluid" />
                 </Col>
-                <Col className="col-9">
+                <Col className="authordetail-book-info col-9">
                   <Link to={`/libro/${encodeURIComponent(book.id)}`} className="me-2">
                     {book.titolo}
                   </Link>
