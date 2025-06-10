@@ -38,12 +38,12 @@ function Notifications({ utente }) {
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {requests.length === 0 ? (
-          <div className="text-muted">Nessuna notifica</div>
+          <div className="text-muted">No notifications</div>
         ) : (
           requests.map((req) => (
             <div key={req.id} className="p-2">
               <Link to={`/profile/${req.senderId}`}>
-                <p>{req.senderName} ti ha inviato una richiesta di amicizia</p>
+                <p>{req.senderName} sent you a friend request</p>
               </Link>
               <Button onClick={() => handleAccept(req.id)} variant="success" size="sm" className="me-2">
                 Accetta

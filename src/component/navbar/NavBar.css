@@ -1,0 +1,98 @@
+.navbar,
+.navbar * {
+  box-sizing: border-box;
+}
+
+.navbar {
+  background-color: #f4f1ea !important;
+  border-bottom: 1px solid #ddd;
+  font-family: "Georgia", serif;
+  padding: 0.8rem 0;
+}
+
+.navbar-brand {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #4b3832 !important;
+  letter-spacing: 1px;
+}
+
+.nav-link,
+.dropdown-item {
+  color: #3c3c3c !important;
+  font-size: 1rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link:hover,
+.dropdown-item:hover {
+  color: #7c2e1c !important;
+  text-decoration: underline;
+}
+
+.navbar-nav .nav-link.dropdown-toggle {
+  color: #3c3c3c !important;
+}
+
+form.navbar-form input[type="search"] {
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  padding: 0.4rem 1rem;
+  width: 13.75rem;
+  font-family: "Arial", sans-serif;
+}
+
+form.navbar-form button {
+  border-radius: 20px;
+  margin-left: 0.5rem;
+  background-color: #7c2e1c;
+  border: none;
+  color: white;
+  padding: 0 0.9rem;
+  font-size: 1.2rem;
+}
+
+form.navbar-form button:hover {
+  background-color: #5a2115;
+}
+
+.navbar-form,
+.icon-container ion-icon {
+  font-size: 1.6rem;
+  color: #4b3832;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.navbar-form,
+.icon-container ion-icon:hover {
+  color: #7c2e1c;
+}
+
+.dropdown-menu {
+  border-radius: 8px;
+  padding: 0.5rem;
+  min-width: 11.25rem;
+  background-color: #fffaf3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-toggle {
+  background-color: transparent !important;
+  border: none;
+  box-shadow: none !important;
+  color: #4b3832;
+}
+
+.dropdown-menu .text-muted {
+  font-size: 0.85rem;
+  padding: 0.25rem 1rem;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 0.5rem;
+  color: #666 !important;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}

@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../redux/actions";
 import Notifications from "./Notifications";
+import "./NavBar.css";
+
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -60,14 +62,14 @@ function NavBar() {
           </Nav>
         </Navbar.Collapse>
         <div>
-          <Form className="d-flex" onSubmit={handleSearch}>
+          <Form className="navbar-form d-flex" onSubmit={handleSearch}>
             <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" value={title} onChange={(e) => setTitle(e.target.value)} />
             <Button variant="outline-success" type="submit">
               <ion-icon name="search-outline"></ion-icon>
             </Button>
           </Form>
         </div>
-        <div className="d-flex">
+        <div className="icon-container d-flex align-items-center">
           <Notifications utente={currentUser} />
           <a href="/friends">
             <ion-icon name="people-outline"></ion-icon>

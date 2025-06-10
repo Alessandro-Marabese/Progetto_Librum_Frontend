@@ -1,5 +1,5 @@
 .login-page-background {
-  background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f"); /* immagine libri */
+  background-image: url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -8,7 +8,6 @@
   align-items: center;
 }
 
-/* Contenitore del form */
 #login-form {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 2.5rem;
@@ -23,14 +22,12 @@
   display: block;
 }
 
-/* Bottone principale allineato a sinistra */
 #login-form button {
   display: block;
   margin-top: 1rem;
   margin-left: auto;
 }
 
-/* Titolo app */
 .app-title {
   font-size: 2rem;
   font-weight: bold;
@@ -40,7 +37,6 @@
   text-align: center;
 }
 
-/* Contenitore dei pulsanti in basso */
 .button-container {
   display: flex;
   justify-content: flex-end;
