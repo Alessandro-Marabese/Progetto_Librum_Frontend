@@ -17,6 +17,14 @@
   letter-spacing: 1px;
 }
 
+.nav-item {
+  text-decoration: none;
+}
+.nav-link.dropdown-toggle:hover {
+  color: #7c2e1c !important;
+  text-decoration: underline;
+}
+
 .nav-link,
 .dropdown-item {
   color: #3c3c3c !important;
@@ -34,7 +42,7 @@
   color: #3c3c3c !important;
 }
 
-form.navbar-form input[type="search"] {
+form.navbar-form input {
   border-radius: 20px;
   border: 1px solid #ccc;
   padding: 0.4rem 1rem;

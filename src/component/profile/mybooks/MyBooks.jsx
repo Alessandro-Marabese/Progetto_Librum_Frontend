@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Dropdown, DropdownButton, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser, getReviewsByBook, getReviewsByUser, getUserBookByUser, updateStatusUserbook } from "../../redux/actions";
+import { getCurrentUser, getReviewsByBook, getReviewsByUser, getUserBookByUser, updateStatusUserbook } from "../../../redux/actions";
 import { Link, useNavigate } from "react-router-dom";
+import "./MyBooks.css";
 
 function MyBooks() {
   const navigate = useNavigate();
@@ -73,9 +74,9 @@ function MyBooks() {
   };
 
   return (
-    <Container>
+    <Container className="mybooks-container">
       <h1>My Books</h1>
-      <div>
+      <div className="mybooks-search">
         <Form className="d-flex" onSubmit={handleSearch}>
           <Form.Control
             type="search"
@@ -85,13 +86,13 @@ function MyBooks() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <Button variant="outline-success" type="submit">
+          <Button type="submit">
             <ion-icon name="search-outline"></ion-icon>
           </Button>
         </Form>
       </div>
       <Row>
-        <Col className="col-3 mt-3">
+        <Col className="mybooks-shelves col-3 mt-3">
           <h3>My Bookshelves</h3>
           <ul className="mybooks-first-list">
             <li onClick={() => setSelectedShelf("WANT_TO_READ")}>Want to Read ({wantToReadCount}) </li>
@@ -101,7 +102,7 @@ function MyBooks() {
           </ul>
         </Col>
         <Col className="col-9 mt-4">
-          <Row className="mb-4">
+          <Row className="mybooks-header-row mb-4">
             <Col>Cover</Col>
             <Col>Title</Col>
             <Col>Author</Col>
@@ -117,17 +118,17 @@ function MyBooks() {
               console.log(reviewsForThisBook);
 
               return (
-                <Row key={book.libro.id}>
-                  <Col>
+                <Row key={book.libro.id} className="book-row">
+                  <Col className="book-cover">
                     <img src={book.libro.coverUrl} alt={book.libro.titolo} className="img-fluid" />
                   </Col>
-                  <Col>
+                  <Col className="book-title">
                     <Link to={`/libro/${encodeURIComponent(book.libro.id)}`}>{book.libro.titolo}</Link>
                   </Col>
-                  <Col>
+                  <Col className="book-author">
                     <Link to={`/autore/${book.libro.nomiAutori[0]}`}>{book.libro.nomiAutori?.[0]}</Link>
                   </Col>
-                  <Col>
+                  <Col className="book-rating">
                     <div>
                       {isLoadingReviews ? (
                         <span>Loading rating...</span>
@@ -147,7 +148,7 @@ function MyBooks() {
                       )}
                     </div>
                   </Col>
-                  <Col>
+                  <Col className="book-shelf-dropdown">
                     <DropdownButton id={`dropdown-${book.libro.id}`} title={formatStatoLettura(book.statoLettura)} variant="outline-secondary" size="sm">
                       {["WANT_TO_READ", "CURRENTLY_READING", "READ"]
                         .filter((stato) => stato !== book.statoLettura)
