@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser, getFriendsByUser, searchUsers } from "../../redux/actions";
+import { getCurrentUser, getFriendsByUser, searchUsers } from "../../../redux/actions";
 import { Link } from "react-router-dom";
 import SearchFriendsModal from "./SearchFriendsModal";
+import "./Friends.css";
 
 function Friends() {
   const dispatch = useDispatch();
@@ -34,13 +35,13 @@ function Friends() {
   };
 
   return (
-    <Container>
+    <Container className="friends-container">
       <h1>Friends</h1>
       <Row>
         <Col className="col-9">
-          <Row>
+          <Row className="friends-grid">
             {friends.map((friend) => (
-              <Col className="col-3" key={friend.id}>
+              <Col className="friend-card col-3" key={friend.id}>
                 <Link to={`/profile/${friend.id}`}>
                   <img src={friend.avatar} alt={friend.name} className="img-fluid" />
                 </Link>
@@ -53,10 +54,10 @@ function Friends() {
             ))}
           </Row>
         </Col>
-        <Col className="col-3">
+        <Col className="col-3 friends-sidebar">
           <h4>Find new friends</h4>
           <div>
-            <Form className="d-flex" onSubmit={handleSearch}>
+            <Form className="search-form d-flex" onSubmit={handleSearch}>
               <Form.Control type="search" placeholder="Search" className="me-2" aria-label="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
               <Button variant="outline-success" type="submit" onClick={() => setModalShow(true)}>
                 <ion-icon name="search-outline"></ion-icon>

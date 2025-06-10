@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalUpdateAvatar from "./ModalUpdateAvatar";
+import "./Profile.css";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -39,10 +40,10 @@ function Profile() {
     }
   }, [dispatch, id, utente, utenteVisitato]);
   return (
-    <Container>
-      <Row className="mt-3">
-        <Col className="col-9">
-          <Row>
+    <Container className="profile-container">
+      <Row className="profile-row mt-3">
+        <Col className="profile-main col-9">
+          <Row className="profile-header-row">
             <Col className="col-3">
               <Image src={utenteAttuale.avatar} alt="Avatar" className="img-fluid" />
             </Col>
@@ -50,13 +51,14 @@ function Profile() {
               <h3 className="border-secondary border-bottom">
                 {utenteAttuale.nome} {utenteAttuale.cognome}
               </h3>
-
-              <h4>Informations</h4>
-              <p>Name: {utenteAttuale.nome}</p>
-              <p>Surname: {utenteAttuale.cognome}</p>
-              <p>Username: {utenteAttuale.username}</p>
-              <p>Email: {utenteAttuale.email}</p>
-              <div className="mt-3">
+              <div className="profile-info">
+                <h4>Informations</h4>
+                <p>Name: {utenteAttuale.nome}</p>
+                <p>Surname: {utenteAttuale.cognome}</p>
+                <p>Username: {utenteAttuale.username}</p>
+                <p>Email: {utenteAttuale.email}</p>
+              </div>
+              <div>
                 <Button className="btn  me-2" onClick={() => setShowEditModal(true)}>
                   Edit Profile
                 </Button>
@@ -82,7 +84,7 @@ function Profile() {
               </div>
             </Col>
           </Row>
-          <Row className="justify-content-around">
+          <Row className="profile-section justify-content-around">
             <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Bookshelves</h6>
             <Col>
               <Link to="/mybooks">To read</Link>
@@ -94,7 +96,7 @@ function Profile() {
               <Link to="/mybooks">Read</Link>
             </Col>
           </Row>
-          <Row>
+          <Row className="profile-section profile-books-update">
             <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Books Update</h6>
             {userBooks.map((userbook) => {
               const libro = userbook.libro;
@@ -108,7 +110,7 @@ function Profile() {
                 azione = "has read";
               }
               return (
-                <Col key={libro.id} className="mb-3 border-bottom pb-3 col-12">
+                <Col key={libro.id} className="profile-book-update-row mb-3 border-bottom pb-3 col-12">
                   <p>
                     <Link to={"/profile"}>
                       {utenteAttuale.nome} {utenteAttuale.cognome}
@@ -116,10 +118,10 @@ function Profile() {
                     {azione}
                   </p>
                   <Row>
-                    <Col xs={3}>
+                    <Col xs={3} className="profile-book-cover">
                       <Image src={libro.coverUrl} alt="Cover" className="img-fluid" />
                     </Col>
-                    <Col>
+                    <Col className="profile-book-info">
                       <h5>
                         <Link to={`/libro/${encodeURIComponent(libro.id)}`}>{libro.titolo}</Link>
                       </h5>
@@ -133,21 +135,21 @@ function Profile() {
               );
             })}
           </Row>
-          <Row>
+          <Row className="profile-section">
             <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Reviews</h6>
             {reviews.content &&
               reviews.content.map((review) => {
                 const libro = review.libro;
                 return (
-                  <Col key={review.id} className="mb-3 border-bottom pb-3 col-12">
-                    <div className="d-flex">
+                  <Col key={review.id} className="profile-review-item mb-3 border-bottom pb-3 col-12">
+                    <div className="d-flex profile-review-content review-info">
                       <p>
                         <Link to="/profile">
                           {utenteAttuale.nome} {utenteAttuale.cognome}
                         </Link>{" "}
                         rated a book
                       </p>
-                      <div>
+                      <div className="stars ms-2">
                         {[1, 2, 3, 4, 5].map((num) => (
                           <ion-icon
                             key={num}
@@ -162,8 +164,8 @@ function Profile() {
                         ))}
                       </div>
                     </div>
-                    <Row>
-                      <Col xs={3}>
+                    <Row className="profile-review-row">
+                      <Col xs={3} className="profile-review-avatar">
                         <Link to={`/libro/${encodeURIComponent(libro.id)}`}>
                           <Image src={libro.coverUrl} alt="Cover" className="img-fluid" />
                         </Link>
@@ -185,7 +187,7 @@ function Profile() {
           </Row>
         </Col>
 
-        <Col className="col-3">
+        <Col className="profile-sidebar col-3">
           <Row>
             <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Friends</h6>
             {friends &&
@@ -203,7 +205,7 @@ function Profile() {
           </Row>
           <Row>
             <h6 className="border-secondary border-bottom">Favorite Genres</h6>
-            <ul>
+            <ul className="genres-list">
               {generiPreferiti.map((genere, i) => (
                 <li key={i}>
                   <Link to={`/generi/${genere}`}>{genere}</Link>

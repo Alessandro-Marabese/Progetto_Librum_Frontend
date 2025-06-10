@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteComment, getCommentByUser, getCurrentUser } from "../../redux/actions";
+import { deleteComment, getCommentByUser, getCurrentUser } from "../../../redux/actions";
 import { Button, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ModalUpdateComment from "./ModalUpdateComment";
+import "./Comments.css";
 
 function Comments() {
   const dispatch = useDispatch();
@@ -41,39 +42,34 @@ function Comments() {
   };
 
   return (
-    <Container>
+    <Container className="my-posts-container">
       <h1>My Posts</h1>
       <Row>
-        <Col className="col-9">
+        <Col className="col-9 my-posts-list">
           {comments &&
             comments?.content
               ?.slice()
               .sort((a, b) => new Date(b.dataCommento) - new Date(a.dataCommento))
               .map((comment) => {
                 return (
-                  <Row key={comment.id}>
+                  <Row key={comment.id} className="post-item">
                     <Col>
-                      <div className="d-flex align-items-start mb-2">
+                      <div className="post-author d-flex align-items-start mb-2">
                         <Link to={`/profile/${currentUser.id}`}>
-                          <img
-                            src={currentUser.avatar}
-                            alt={currentUser.nome}
-                            className="rounded-circle me-2"
-                            style={{ width: "32px", height: "32px", objectFit: "cover" }}
-                          />
+                          <img src={currentUser.avatar} alt={currentUser.nome} className="me-2" />
                         </Link>
                         <div>
                           <div className="d-flex">
-                            <Link to={`/profile/${currentUser.id}`}>
-                              <p className="mb-1 fw-semibold">{currentUser ? `${currentUser.nome} ${currentUser.cognome}` : "Caricamento..."}</p>
+                            <Link to={`/profile/${currentUser.id}`} className="author-name">
+                              <p className="mb-1 fw-semibold ">{currentUser ? `${currentUser.nome} ${currentUser.cognome}` : "Caricamento..."}</p>
                             </Link>
-                            <p className="text-muted ms-5">{comment.dataCommento}</p>
+                            <p className="text-muted ms-5 post-date">{comment.dataCommento}</p>
                           </div>
-                          <p className="mb-0">{comment.testo}</p>
+                          <p className="mb-0 post-text">{comment.testo}</p>
                         </div>
                       </div>
                     </Col>
-                    <Col>
+                    <Col className="post-actions">
                       <Button
                         onClick={() => {
                           setSelectedComment(comment);
@@ -88,10 +84,16 @@ function Comments() {
                   </Row>
                 );
               })}
-          {hasMore && <Button onClick={handleLoadMore}>Load more comments</Button>}
+          {hasMore && (
+            <Button onClick={handleLoadMore} className="load-more-btn">
+              Load more comments
+            </Button>
+          )}
         </Col>
         <Col className="col-3">
-          <Link to={`/profile/${currentUser.id}`}>Back to profile</Link>
+          <Link to={`/profile/${currentUser.id}`} className="back-link">
+            Back to profile
+          </Link>
         </Col>
       </Row>
     </Container>

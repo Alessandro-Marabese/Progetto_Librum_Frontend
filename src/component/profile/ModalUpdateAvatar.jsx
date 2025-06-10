@@ -26,7 +26,7 @@ function ModalUpdateAvatar({ show, onHide, utente, onUpdate }) {
     }
   };
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} className="profile-modal">
       <Modal.Header closeButton>
         <Modal.Title>Change Avatar</Modal.Title>
       </Modal.Header>

@@ -29,7 +29,7 @@ function ModalUpdateUser({ utente, show, onHide, onUpdate }) {
     });
   };
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} className="profile-modal">
       <Modal.Header closeButton>
         <Modal.Title>Edit Profile</Modal.Title>
       </Modal.Header>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { getCommentByUser, updateComment } from "../../redux/actions";
+import { getCommentByUser, updateComment } from "../../../redux/actions";
 
 function ModalUpdateComment({ show, onHide, comment, utente }) {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ function ModalUpdateComment({ show, onHide, comment, utente }) {
   };
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} className="my-post-modal">
       <Modal.Header closeButton>
         <Modal.Title>Edit Comment</Modal.Title>
       </Modal.Header>

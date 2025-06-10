@@ -11,8 +11,8 @@ import LibroDetails from "./component/libro/LibroDetails";
 import AutoreDetails from "./component/autore/AutoreDetails";
 import Genere from "./component/genere/Genere";
 import MyBooks from "./component/profile/mybooks/MyBooks";
-import Friends from "./component/profile/Friends";
-import Comments from "./component/profile/Comments";
+import Friends from "./component/profile/friends/Friends";
+import Comments from "./component/profile/comments/Comments";
 
 function AppContent() {
   const location = useLocation();

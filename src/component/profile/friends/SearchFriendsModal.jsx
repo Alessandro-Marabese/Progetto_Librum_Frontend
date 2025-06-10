@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function SearchFriendsModal({ show, onHide, utenti }) {
   console.log(utenti);
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} className="search-friends-modal">
       <Modal.Header closeButton>
         <Modal.Title>Search Results</Modal.Title>
       </Modal.Header>
