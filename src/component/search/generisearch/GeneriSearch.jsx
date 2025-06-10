@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
-import { getAllGenres, getBooksByGenre } from "../../redux/actions";
+import { getAllGenres, getBooksByGenre } from "../../../redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import "./GeneriSearch.css";
 
 function GeneriSearch() {
   const dispatch = useDispatch();
@@ -33,60 +34,60 @@ function GeneriSearch() {
   };
 
   return (
-    <Container>
+    <Container className="genres-container">
       <Row>
-        <Col className="col-10">
+        <Col className="genres-main col-10">
           <h1>Genres</h1>
-          <div>
-            <Form onSubmit={handleGenreSearch}>
+          <div className="genres-search">
+            <Form onSubmit={handleGenreSearch} className="search-form">
               <Form.Control type="text" placeholder="Search genre by name" value={genre} onChange={(e) => setGenre(e.target.value)} />
               <Button type="submit">
                 <ion-icon name="search-outline"></ion-icon>
               </Button>
             </Form>
           </div>
-          <Row>
+          <Row className="genre-section">
             <h3>Fantasy</h3>
             {isLoading
               ? Array.from({ length: placeholderCount }).map((_, idx) => (
-                  <Col key={idx} className="col-3 mb-3">
-                    <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+                  <Col key={idx} className="genre-card-col col-3 mb-3">
+                    <Card className="placeholder"></Card>
                   </Col>
                 ))
               : fantasy?.slice(0, 4).map((book) => (
-                  <Col key={book.id} className="col-3">
+                  <Col key={book.id} className="genre-card-col col-3">
                     <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                       <Card.Img variant="top" src={book.coverUrl} />
                     </Link>
                   </Col>
                 ))}
           </Row>
-          <Row>
+          <Row className="genre-section">
             <h3>Romance</h3>
             {isLoading
               ? Array.from({ length: placeholderCount }).map((_, idx) => (
-                  <Col key={idx} className="col-3 mb-3">
-                    <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+                  <Col key={idx} className="genre-card-col col-3 mb-3">
+                    <Card className="placeholder"></Card>
                   </Col>
                 ))
               : romance?.slice(0, 4).map((book) => (
-                  <Col key={book.id} className="col-3">
+                  <Col key={book.id} className="genre-card-col col-3">
                     <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                       <Card.Img variant="top" src={book.coverUrl} />
                     </Link>
                   </Col>
                 ))}
           </Row>
-          <Row>
+          <Row className="genre-section">
             <h3>Thriller</h3>
             {isLoading
               ? Array.from({ length: placeholderCount }).map((_, idx) => (
-                  <Col key={idx} className="col-3 mb-3">
-                    <Card style={{ width: "100%", height: "250px", backgroundColor: "#ddd", animation: "placeholder-glow 1.5s infinite" }}></Card>
+                  <Col key={idx} className="genre-card-col col-3 mb-3">
+                    <Card className="placeholder"></Card>
                   </Col>
                 ))
               : thriller?.slice(0, 4).map((book) => (
-                  <Col key={book.id} className="col-3">
+                  <Col key={book.id} className="genre-card-col col-3">
                     <Card>
                       <Link to={`/libro/${encodeURIComponent(book.id)}`}>
                         <Card.Img variant="top" src={book.coverUrl} />
@@ -96,10 +97,12 @@ function GeneriSearch() {
                 ))}
           </Row>
         </Col>
-        <Col className="col-2">
+        <Col className="genres-sidebar col-2">
           <h3>All Genres</h3>
           {isLoading ? (
-            <Spinner animation="border" />
+            <div className="genres-loading">
+              <Spinner />
+            </div>
           ) : (
             <ul>
               {allGenres.map((genre) => (

@@ -1,8 +1,9 @@
 import { Container, Button, Form, Row, Col, Placeholder } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getBooksByAuthor, getBooksByTitle } from "../../redux/actions";
+import { getBooksByAuthor, getBooksByTitle } from "../../../redux/actions";
 import { Link, useLocation } from "react-router-dom";
+import "./Search.css";
 
 function Search() {
   const [title, setTitle] = useState("");
@@ -38,17 +39,17 @@ function Search() {
     }
   };
   return (
-    <Container>
-      <div>
-        <h2>Search by Title</h2>
-        <Form onSubmit={handleTitleSearch}>
+    <Container className="search-container">
+      <div className="search-forms">
+        <h2 className="search-title">Search by Title</h2>
+        <Form onSubmit={handleTitleSearch} className="search-form">
           <Form.Control type="text" placeholder="Search by Title" value={title} onChange={(e) => setTitle(e.target.value)} />
           <Button type="submit">
             <ion-icon name="search-outline"></ion-icon>
           </Button>
         </Form>
-        <h2>Search by Author</h2>
-        <Form onSubmit={handleAuthorSearch}>
+        <h2 className="search-title">Search by Author</h2>
+        <Form onSubmit={handleAuthorSearch} className="search-form">
           <Form.Control type="text" placeholder="Search by Title" value={author} onChange={(e) => setAuthor(e.target.value)} />
           <Button type="submit">
             <ion-icon name="search-outline"></ion-icon>
@@ -57,23 +58,23 @@ function Search() {
       </div>
 
       {loading && (
-        <div className="d-flex justify-content-center my-4">
+        <div className="search-loading d-flex justify-content-center my-4">
           <Placeholder xs={3} />
           <Placeholder xs={3} />
           <Placeholder xs={3} />
         </div>
       )}
       {!loading && (
-        <div>
+        <div className="search-results">
           {books.length === 0 ? (
             <Row></Row>
           ) : (
             books.map((book, index) => (
-              <Row key={index} className="mb-3">
-                <Col className="col-3">
+              <Row key={index} className="search-item mb-3">
+                <Col className="search-cover col-3">
                   <img src={book.coverUrl} alt={book.titolo} className="img-fluid" />
                 </Col>
-                <Col className="col-9">
+                <Col className="search-details col-9">
                   <h3>
                     <Link to={`/libro/${encodeURIComponent(book.id)}`}>{book.titolo}</Link>
                   </h3>

@@ -1,0 +1,106 @@
+.genres-container {
+  background-color: #fdfbf8;
+  font-family: "Georgia", serif;
+  padding: 2rem 0;
+  color: #3c3c3c;
+}
+
+.genres-search {
+  margin-bottom: 2rem;
+}
+.genres-search .form-control {
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  font-family: "Arial", sans-serif;
+  max-width: 400px;
+}
+.genres-search .btn {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+.genres-search .btn:hover {
+  background-color: #5a2115;
+}
+
+.genre-section {
+  margin-bottom: 2rem;
+}
+.genre-section > h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #4b3832;
+  margin-bottom: 1rem;
+}
+.genre-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.genre-card-col {
+  flex: 0 0 calc(25% - 1rem);
+}
+.genre-card-col .card {
+  width: 100%;
+  height: 380px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+.genre-card-col .card:hover {
+  transform: translateY(-4px);
+}
+.genre-card-col img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder glow animation */
+@keyframes placeholder-glow {
+  0% {
+    background-color: #ddd;
+  }
+  50% {
+    background-color: #ccc;
+  }
+  100% {
+    background-color: #ddd;
+  }
+}
+
+.genres-sidebar > h3 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #4b3832;
+  margin-bottom: 1rem;
+}
+.genres-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.genres-sidebar li {
+  margin-bottom: 0.5rem;
+}
+.genres-sidebar a {
+  color: #3c3c3c;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+.genres-sidebar a:hover {
+  color: #7c2e1c;
+  text-decoration: underline;
+}
+
+.genres-loading {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
