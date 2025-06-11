@@ -46,7 +46,9 @@ function LoginPage() {
             <Form.Control type="text" className="mb-2" placeholder="Inserisci il tuo username" required />
             <Form.Label className="mb-2">password</Form.Label>
             <Form.Control type="password" className="mb-2" placeholder="Inserisci la tua password" required />
-            <Button type="submit">Login</Button>
+            <Button type="submit" className="login-button">
+              Login
+            </Button>
           </Form>
         ) : (
           <Form onSubmit={(event) => handleRegister(event)}>
@@ -60,7 +62,9 @@ function LoginPage() {
             <FormControl type="email" placeholder="Inserisci la tua email" className="mb-2" required />
             <FormLabel className="mb-2">Password</FormLabel>
             <FormControl type="password" placeholder="Scegli la password" className="mb-3" required />
-            <Button type="submit">Registrati</Button>
+            <Button type="submit" className="login-button">
+              Registrati
+            </Button>
           </Form>
         )}
         <div className="mt-2 button-container">

@@ -20,6 +20,7 @@ function Profile() {
   const { id } = useParams();
   const me = useSelector((state) => state.users.content);
   const visited = useSelector((state) => state.users.utenteVisitato);
+  console.log(me);
 
   const userBooks = useSelector((state) => state.userBook.content);
   const reviews = useSelector((state) => state.reviews.content);
@@ -27,8 +28,6 @@ function Profile() {
   const myFriends = useSelector((state) => state.friends.myFriends);
   const userFriends = useSelector((state) => state.friends.userFriends.content);
   const isFriendsLoading = useSelector((state) => state.friends.isLoading);
-  console.log(userFriends);
-  console.log(myFriends);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
@@ -40,21 +39,18 @@ function Profile() {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
-  // 2) Appena me.id è disponibile: carico i miei amici
   useEffect(() => {
     if (me?.id) {
       dispatch(getFriendsByUser(me.id));
     }
   }, [dispatch, me?.id]);
 
-  // 3) Quando cambia id in URL: carico l’utente visitato
   useEffect(() => {
     if (id) {
       dispatch(getViewedUser(id));
     }
   }, [dispatch, id]);
 
-  // 4) Appena visited.id è disponibile: carico gli amici di visited
   useEffect(() => {
     if (visited?.id) {
       dispatch(getFriendsByOtherUser(visited.id));
@@ -245,10 +241,9 @@ function Profile() {
         <Col className="profile-sidebar col-3">
           <Row>
             <h6 className="border-secondary border-bottom">{userToShow.nome}'s Friends</h6>
-            {isFriendsLoading ? (
-              <Spinner animation="border" variant="primary" />
-            ) : (
-              friendsToShow.map((friend) => (
+            {isFriendsLoading && <Spinner animation="border" variant="primary" />}
+            {!isFriendsLoading &&
+              (friendsToShow || []).map((friend) => (
                 <Col key={friend.id} className="col-3">
                   <Image src={friend.avatar} alt="Avatar" className="img-fluid" as={Link} to={`/profile/${friend.id}`} />
                   <p>
@@ -257,8 +252,7 @@ function Profile() {
                     </Link>
                   </p>
                 </Col>
-              ))
-            )}
+              ))}
           </Row>
           <Row>
             <h6 className="border-secondary border-bottom">Favorite Genres</h6>

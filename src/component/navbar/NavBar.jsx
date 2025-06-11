@@ -10,6 +10,7 @@ function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.users.content);
+  console.log(currentUser);
   const [title, setTitle] = useState("");
   useEffect(() => {
     dispatch(getCurrentUser());
@@ -83,7 +84,7 @@ function NavBar() {
               <div className="text-muted">
                 {currentUser.nome} {currentUser.cognome}
               </div>
-              <Dropdown.Item as={Link} to={`/profile/${currentUser.id}`}>
+              <Dropdown.Item as={Link} to={currentUser?.id ? `/profile/${currentUser.id}` : "#"} disabled={!currentUser?.id}>
                 Profile
               </Dropdown.Item>
               <Dropdown.Item as={Link} to="/friends">

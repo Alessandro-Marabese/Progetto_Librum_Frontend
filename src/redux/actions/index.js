@@ -126,6 +126,7 @@ export const getViewedUser = (id) => {
       dispatch({ type: IS_LOADING_ON });
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
+      console.log("🎯 token:", token);
       const response = await fetch(`${apiUrl}/utenti/${id}`, {
         method: "GET",
         headers: {
@@ -152,6 +153,7 @@ export const getUserById = (utenteId, context = "review") => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
+      console.log("🎯 token:", token);
       const response = await fetch(`${apiUrl}/utenti/${utenteId}`, {
         method: "GET",
         headers: {

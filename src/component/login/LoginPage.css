@@ -27,7 +27,17 @@
   margin-top: 1rem;
   margin-left: auto;
 }
-
+#login-form button {
+  border-radius: 20px;
+  background-color: #7c2e1c;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+#login-form button:hover {
+  background-color: #5a2115;
+}
 .app-title {
   font-size: 2rem;
   font-weight: bold;
@@ -40,4 +50,13 @@
 .button-container {
   display: flex;
   justify-content: flex-end;
+}
+
+#login-form #login-button button {
+  border-radius: 20px;
+  background-color: #ccc;
+  color: #3c3c3c;
+  border: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s;
 }
