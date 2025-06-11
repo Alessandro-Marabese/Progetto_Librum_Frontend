@@ -9,10 +9,11 @@ import "./Friends.css";
 function Friends() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.content);
-  const friends = useSelector((state) => state.friends.content);
+  const friends = useSelector((state) => state.friends.myFriends);
   const searchedUsers = useSelector((state) => state.users.ricercaUtenti);
   const [modalShow, setModalShow] = useState(false);
   const [query, setQuery] = useState("");
+  console.log(friends);
 
   useEffect(() => {
     if (!user?.id) {

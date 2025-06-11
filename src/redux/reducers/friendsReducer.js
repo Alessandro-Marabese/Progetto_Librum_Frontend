@@ -4,12 +4,14 @@ import {
   DECLINE_FRIEND_REQUEST,
   GET_FRIENDS,
   GET_FRIENDS_REQUESTS,
+  GET_USER_FRIENDS,
   IS_LOADING_OFF,
   IS_LOADING_ON,
 } from "../actions";
 
 const initialState = {
-  content: [],
+  myFriends: [],
+  userFriends: [],
   friendsRequest: [],
   isLoading: false,
 };
@@ -19,8 +21,13 @@ const friendsReducer = (state = initialState, action) => {
     case GET_FRIENDS:
       return {
         ...state,
-        content: action.payload.content,
+        myFriends: action.payload.content,
         isLoading: false,
+      };
+    case GET_USER_FRIENDS:
+      return {
+        ...state,
+        userFriends: action.payload,
       };
     case GET_FRIENDS_REQUESTS:
       return {

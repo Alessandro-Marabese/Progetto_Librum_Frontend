@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { acceptFriendRequest, getFriendsRequest, rejectFriendRequest } from "../../redux/actions";
 import { Button, Dropdown } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function Notifications({ utente }) {
   const dispatch = useDispatch();
@@ -20,6 +21,8 @@ function Notifications({ utente }) {
 
     fetchRequests();
   }, [dispatch, utente]);
+
+  console.log(requests);
 
   const handleAccept = (requestId) => {
     dispatch(acceptFriendRequest(requestId));
@@ -42,7 +45,7 @@ function Notifications({ utente }) {
         ) : (
           requests.map((req) => (
             <div key={req.id} className="p-2">
-              <Link to={`/profile/${req.senderId}`}>
+              <Link to={`/profile/${req.senderId}`} className="notification-link">
                 <p>{req.senderName} sent you a friend request</p>
               </Link>
               <Button onClick={() => handleAccept(req.id)} variant="success" size="sm" className="me-2">

@@ -31,6 +31,7 @@ export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_COMMENT = "DELETE_COMMENT";
 export const UPDATE_COMMENT = "UPDATE_COMMENT";
 export const GET_FRIENDS = "GET_FRIENDS";
+export const GET_USER_FRIENDS = "GET_USER_FRIENDS";
 export const GET_FRIENDS_REQUESTS = "GET_FRIENDS_REQUESTS";
 export const ADD_FRIEND_REQUEST = "ADD_FRIEND_REQUEST";
 export const ACCEPT_FRIEND_REQUEST = "ACCEPT_FRIEND_REQUEST";
@@ -197,6 +198,32 @@ export const getFriendsByUser = (utenteId) => {
       if (response.ok) {
         const data = await response.json();
         dispatch({ type: GET_FRIENDS, payload: data });
+        return data;
+      } else {
+        throw new Error("Errore durante il recupero degli amici");
+      }
+    } catch (error) {
+      console.log("Errore durante il recupero degli amici", error);
+    } finally {
+      dispatch({ type: IS_LOADING_OFF });
+    }
+  };
+};
+export const getFriendsByOtherUser = (utenteId) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: IS_LOADING_ON });
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const token = sessionStorage.getItem("token");
+      const response = await fetch(`${apiUrl}/utenti/amici/${utenteId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        dispatch({ type: GET_USER_FRIENDS, payload: data });
         return data;
       } else {
         throw new Error("Errore durante il recupero degli amici");
@@ -644,13 +671,13 @@ export const getReviewsByUser = (userId) => {
   };
 };
 
-export const getReviewsByUserHomepage = (utenteId) => {
+export const getReviewsByUserHomepage = (utenteId, page = 0, reset = false) => {
   return async (dispatch) => {
     try {
       dispatch({ type: IS_LOADING_ON });
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
-      const response = await fetch(`${apiUrl}/review/utente/${utenteId}`, {
+      const response = await fetch(`${apiUrl}/review/utente/${utenteId}?page=${page}&size=3`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -658,7 +685,7 @@ export const getReviewsByUserHomepage = (utenteId) => {
       });
       if (response.ok) {
         const data = await response.json();
-        dispatch({ type: GET_REVIEWS_BY_USER_HOMEPAGE, payload: { utenteId, reviews: data } });
+        dispatch({ type: GET_REVIEWS_BY_USER_HOMEPAGE, payload: { utenteId, reviews: data, reset } });
         return data;
       } else {
         throw new Error("Errore durante il recupero delle recensioni dell'utente");
@@ -939,7 +966,7 @@ export const sendFriendRequest = (senderId, receiverId) => {
       dispatch({ type: IS_LOADING_ON });
       const apiUrl = import.meta.env.VITE_API_URL;
       const token = sessionStorage.getItem("token");
-      const response = await fetch(`${apiUrl}/amici/${senderId}/${receiverId}`, {
+      const response = await fetch(`${apiUrl}/amici/sendRequest`, {
         method: "POST",
 
         headers: {

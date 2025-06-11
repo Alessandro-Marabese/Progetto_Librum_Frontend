@@ -104,3 +104,14 @@ form.navbar-form button:hover {
 .dropdown-toggle::after {
   display: none;
 }
+
+.notification-link {
+  color: #3c3c3c !important;
+  font-size: 1rem;
+  transition: color 0.2s ease-in-out;
+  text-decoration: none;
+}
+.notification-link:hover {
+  color: #7c2e1c !important;
+  text-decoration: underline;
+}

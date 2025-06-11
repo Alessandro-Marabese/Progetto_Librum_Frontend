@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser, getFriendsByUser, getReviewsByUserHomepage, getUserBookByUser, getUserById } from "../../redux/actions";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./HomePage.css";
 
@@ -9,7 +9,7 @@ function HomePage() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.users.content);
   const userBooks = useSelector((state) => state.userBook.content);
-  const friends = useSelector((state) => state.friends.content);
+  const friends = useSelector((state) => state.friends.myFriends);
   const reviews = useSelector((state) => state.reviews.reviewsByUsers);
   const usersReviewsById = useSelector((state) => state.users.userReviews || {});
   console.log(reviews);
@@ -19,6 +19,8 @@ function HomePage() {
   const wantToRead = userBooks.filter((book) => book.statoLettura === "WANT_TO_READ");
   const readCount = userBooks.filter((book) => book.statoLettura === "READ").length;
   const allBooksCount = userBooks.length;
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     dispatch(getCurrentUser());
@@ -34,10 +36,12 @@ function HomePage() {
   useEffect(() => {
     if (friends && friends.length > 0) {
       friends.forEach((friend) => {
-        dispatch(getReviewsByUserHomepage(friend.id));
+        setPage(0);
+        setHasMore(true);
+        dispatch(getReviewsByUserHomepage(friend.id, page, true));
       });
     }
-  }, [dispatch, friends]);
+  }, [dispatch, friends, page]);
 
   useEffect(() => {
     if (reviews && reviews.length > 0) {
@@ -48,6 +52,14 @@ function HomePage() {
       });
     }
   }, [reviews, usersReviewsById, dispatch]);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    dispatch(getReviewsByUserHomepage(currentUser.id, nextPage)).then((data) => {
+      if (data?.last) setHasMore(false);
+      setPage(nextPage);
+    });
+  };
 
   return (
     <Container className="homepage-container">
@@ -127,6 +139,7 @@ function HomePage() {
           <h3 className="section-title">Updates from your friends</h3>
           {reviews.length > 0 &&
             reviews
+              .slice()
               .sort((a, b) => new Date(b.dataCreazione) - new Date(a.dataCreazione))
               .map((review) => {
                 const user = usersReviewsById[review.utenteId];
@@ -186,6 +199,11 @@ function HomePage() {
               })}
         </Col>
       </Row>
+      {hasMore && (
+        <Button onClick={handleLoadMore} className="load-more-btn mt-3">
+          Load more reviews
+        </Button>
+      )}
     </Container>
   );
 }

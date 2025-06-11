@@ -1,5 +1,13 @@
-import { Col, Container, Row, Image, Button } from "react-bootstrap";
-import { getCurrentUser, getFriendsByUser, getReviewsByUser, getUserBookByUser, getViewedUser } from "../../redux/actions";
+import { Col, Container, Row, Image, Button, Spinner } from "react-bootstrap";
+import {
+  getCurrentUser,
+  getFriendsByOtherUser,
+  getFriendsByUser,
+  getReviewsByUser,
+  getUserBookByUser,
+  getViewedUser,
+  sendFriendRequest,
+} from "../../redux/actions";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -10,11 +18,18 @@ import "./Profile.css";
 function Profile() {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const utente = useSelector((state) => state.users.content);
-  const utenteVisitato = useSelector((state) => state.users.utenteVisitato);
-  const friends = useSelector((state) => state.friends.content);
+  const me = useSelector((state) => state.users.content);
+  const visited = useSelector((state) => state.users.utenteVisitato);
+
   const userBooks = useSelector((state) => state.userBook.content);
   const reviews = useSelector((state) => state.reviews.content);
+
+  const myFriends = useSelector((state) => state.friends.myFriends);
+  const userFriends = useSelector((state) => state.friends.userFriends.content);
+  const isFriendsLoading = useSelector((state) => state.friends.isLoading);
+  console.log(userFriends);
+  console.log(myFriends);
+
   const [showEditModal, setShowEditModal] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [reloadTrigger, setReloadTrigger] = useState(0);
@@ -22,70 +37,110 @@ function Profile() {
   const generiPreferiti = Array.from(new Set(userBooks.flatMap((userbook) => userbook.libro?.nomiGeneri || []))).sort();
 
   useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  // 2) Appena me.id è disponibile: carico i miei amici
+  useEffect(() => {
+    if (me?.id) {
+      dispatch(getFriendsByUser(me.id));
+    }
+  }, [dispatch, me?.id]);
+
+  // 3) Quando cambia id in URL: carico l’utente visitato
+  useEffect(() => {
     if (id) {
       dispatch(getViewedUser(id));
-    } else {
-      dispatch(getCurrentUser());
     }
-  }, [dispatch, id, reloadTrigger]);
+  }, [dispatch, id]);
 
-  const utenteAttuale = id ? utenteVisitato : utente;
+  // 4) Appena visited.id è disponibile: carico gli amici di visited
+  useEffect(() => {
+    if (visited?.id) {
+      dispatch(getFriendsByOtherUser(visited.id));
+    }
+  }, [dispatch, visited?.id]);
 
   useEffect(() => {
-    const user = id ? utenteVisitato : utente;
+    const user = id ? visited : me;
     if (user?.id) {
-      dispatch(getFriendsByUser(user.id));
       dispatch(getUserBookByUser(user.id));
       dispatch(getReviewsByUser(user.id));
     }
-  }, [dispatch, id, utente, utenteVisitato]);
+  }, [dispatch, id, me, visited, reloadTrigger]);
+
+  const isOwner = !id || me.id === visited.id;
+  const friendsToShow = isOwner ? myFriends : userFriends;
+
+  const isFriend = !isOwner && myFriends.some((f) => f.id === visited.id);
+
+  const handleAddFriend = () => {
+    dispatch(sendFriendRequest(me.id, visited.id)).then(() => dispatch(getFriendsByUser(me.id)));
+  };
+
+  const userToShow = isOwner ? me : visited;
+
   return (
     <Container className="profile-container">
       <Row className="profile-row mt-3">
         <Col className="profile-main col-9">
           <Row className="profile-header-row">
             <Col className="col-3">
-              <Image src={utenteAttuale.avatar} alt="Avatar" className="img-fluid" />
+              <Image src={userToShow.avatar} alt="Avatar" className="img-fluid" />
             </Col>
             <Col>
               <h3 className="border-secondary border-bottom">
-                {utenteAttuale.nome} {utenteAttuale.cognome}
+                {userToShow.nome} {userToShow.cognome}
               </h3>
               <div className="profile-info">
                 <h4>Informations</h4>
-                <p>Name: {utenteAttuale.nome}</p>
-                <p>Surname: {utenteAttuale.cognome}</p>
-                <p>Username: {utenteAttuale.username}</p>
-                <p>Email: {utenteAttuale.email}</p>
+                <p>Name: {userToShow.nome}</p>
+                <p>Surname: {userToShow.cognome}</p>
+                <p>Username: {userToShow.username}</p>
+                <p>Email: {userToShow.email}</p>
               </div>
               <div>
-                <Button className="btn  me-2" onClick={() => setShowEditModal(true)}>
-                  Edit Profile
-                </Button>
-                <ModalUpdateUser
-                  show={showEditModal}
-                  onHide={() => {
-                    setShowEditModal(false);
-                  }}
-                  utente={utente}
-                  onUpdate={() => {
-                    setReloadTrigger((prev) => prev + 1);
-                  }}
-                />
-                <Button className="btn " onClick={() => setShowAvatarModal(true)}>
-                  Change Avatar
-                </Button>
-                <ModalUpdateAvatar
-                  show={showAvatarModal}
-                  onHide={() => setShowAvatarModal(false)}
-                  utente={utente}
-                  onUpdate={() => setReloadTrigger((prev) => prev + 1)}
-                />
+                {isOwner ? (
+                  <>
+                    <Button className="btn  me-2" onClick={() => setShowEditModal(true)}>
+                      Edit Profile
+                    </Button>
+                    <ModalUpdateUser
+                      show={showEditModal}
+                      onHide={() => {
+                        setShowEditModal(false);
+                      }}
+                      utente={me}
+                      onUpdate={() => {
+                        setReloadTrigger((prev) => prev + 1);
+                      }}
+                    />
+                    <Button className="btn " onClick={() => setShowAvatarModal(true)}>
+                      Change Avatar
+                    </Button>
+                    <ModalUpdateAvatar
+                      show={showAvatarModal}
+                      onHide={() => setShowAvatarModal(false)}
+                      utente={me}
+                      onUpdate={() => setReloadTrigger((prev) => prev + 1)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {!isFriend ? (
+                      <Button variant="primary" onClick={handleAddFriend}>
+                        Add Friend
+                      </Button>
+                    ) : (
+                      <Button variant="danger">Delete Friend</Button>
+                    )}
+                  </>
+                )}
               </div>
             </Col>
           </Row>
           <Row className="profile-section justify-content-around">
-            <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Bookshelves</h6>
+            <h6 className="border-secondary border-bottom">{userToShow.nome}'s Bookshelves</h6>
             <Col>
               <Link to="/mybooks">To read</Link>
             </Col>
@@ -97,7 +152,7 @@ function Profile() {
             </Col>
           </Row>
           <Row className="profile-section profile-books-update">
-            <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Books Update</h6>
+            <h6 className="border-secondary border-bottom">{userToShow.nome}'s Books Update</h6>
             {userBooks.map((userbook) => {
               const libro = userbook.libro;
 
@@ -113,7 +168,7 @@ function Profile() {
                 <Col key={libro.id} className="profile-book-update-row mb-3 border-bottom pb-3 col-12">
                   <p>
                     <Link to={"/profile"}>
-                      {utenteAttuale.nome} {utenteAttuale.cognome}
+                      {userToShow.nome} {userToShow.cognome}
                     </Link>{" "}
                     {azione}
                   </p>
@@ -136,7 +191,7 @@ function Profile() {
             })}
           </Row>
           <Row className="profile-section">
-            <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Reviews</h6>
+            <h6 className="border-secondary border-bottom">{userToShow.nome}'s Reviews</h6>
             {reviews.content &&
               reviews.content.map((review) => {
                 const libro = review.libro;
@@ -145,7 +200,7 @@ function Profile() {
                     <div className="d-flex profile-review-content review-info">
                       <p>
                         <Link to="/profile">
-                          {utenteAttuale.nome} {utenteAttuale.cognome}
+                          {userToShow.nome} {userToShow.cognome}
                         </Link>{" "}
                         rated a book
                       </p>
@@ -189,10 +244,11 @@ function Profile() {
 
         <Col className="profile-sidebar col-3">
           <Row>
-            <h6 className="border-secondary border-bottom">{utenteAttuale.nome}'s Friends</h6>
-            {friends &&
-              friends.length > 0 &&
-              friends.map((friend) => (
+            <h6 className="border-secondary border-bottom">{userToShow.nome}'s Friends</h6>
+            {isFriendsLoading ? (
+              <Spinner animation="border" variant="primary" />
+            ) : (
+              friendsToShow.map((friend) => (
                 <Col key={friend.id} className="col-3">
                   <Image src={friend.avatar} alt="Avatar" className="img-fluid" as={Link} to={`/profile/${friend.id}`} />
                   <p>
@@ -201,7 +257,8 @@ function Profile() {
                     </Link>
                   </p>
                 </Col>
-              ))}
+              ))
+            )}
           </Row>
           <Row>
             <h6 className="border-secondary border-bottom">Favorite Genres</h6>
